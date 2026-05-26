@@ -1,0 +1,41 @@
+# Secrets & Environment
+.env
+.env.local
+.env.development
+.env.production
+apps/backend/.env
+apps/frontend/.env.local
+*.env
+
+# Dependencies (reinstallable)
+node_modules/
+apps/frontend/node_modules/
+apps/backend/node_modules/
+packages/shared/node_modules/
+
+# Build outputs (regenerated on build)
+dist/
+.next/
+apps/backend/dist/
+apps/frontend/.next/
+apps/frontend/out/
+
+# Uploaded files (user data, not source code)
+apps/backend/uploads/
+*.pdf
+*.txt
+
+# UI Designs & Documentation
+ui/
+*.md
+
+# OS & Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
+npm-debug.log*
+
+# Runtime & cache
+.eslintcache
+*.tsbuildinfo
