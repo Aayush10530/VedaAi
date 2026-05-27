@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "worker": "tsx watch src/workers/generation.worker.ts",
     "build": "tsc",
+    "tsc": "tsc --noEmit",
     "start": "node dist/index.ts"
   },
   "dependencies": {
