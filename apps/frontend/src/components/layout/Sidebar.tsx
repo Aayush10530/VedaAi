@@ -1,0 +1,91 @@
+import React from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { Home, Users, FileText, Sparkles, FolderHeart, Settings } from 'lucide-react';
+import { cn } from '../../lib/cn';
+import { useAssignmentStore } from '../../store/assignmentStore';
+
+export function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const assignments = useAssignmentStore((state) => state.assignments);
+  const activeCount = assignments.length || 10;
+
+  const isToolkitActive = pathname.includes('/result');
+  const isAssignmentsActive = pathname.includes('/assignments') || pathname === '/dashboard' || pathname === '/';
+
+  const menuItems = [
+    { label: 'Home', icon: Home, href: '/dashboard', active: false },
+    { label: 'My Groups', icon: Users, href: '/dashboard', active: false },
+    { label: 'Assignments', icon: FileText, href: '/dashboard', active: isAssignmentsActive && !isToolkitActive, badge: activeCount },
+    { label: "AI Teacher's Toolkit", icon: Sparkles, href: '/assignments/new', active: isToolkitActive || pathname.includes('/new') },
+    { label: 'My Library', icon: FolderHeart, href: '/dashboard', active: false },
+  ];
+
+  return (
+    <aside className="w-64 bg-white rounded-2xl shadow-sm border border-neutral-100 flex flex-col justify-between p-5 h-[calc(100vh-24px)] sticky top-3">
+      <div className="space-y-6">
+        <Link href="/dashboard" className="flex items-center gap-2 px-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-brand-orange to-red-600 rounded-lg flex items-center justify-center shadow-sm">
+            <span className="text-white font-black text-sm">V</span>
+          </div>
+          <span className="font-bold text-lg text-neutral-900 tracking-tight">VedaAI</span>
+        </Link>
+
+        <button
+          onClick={() => router.push('/assignments/new')}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-brand-orange to-brand-dark text-white text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-95"
+        >
+          <span>✦</span>
+          Create Assignment
+        </button>
+
+        <nav className="space-y-1.5">
+          {menuItems.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={idx}
+                href={item.href}
+                className={cn(
+                  'flex items-center justify-between px-3.5 py-2.5 rounded-xl text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 transition-all group',
+                  item.active && 'bg-neutral-100 text-neutral-950 font-semibold'
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon className={cn('w-4.5 h-4.5 text-neutral-400 group-hover:text-neutral-700 transition-colors', item.active && 'text-neutral-900')} />
+                  <span className="text-sm">{item.label}</span>
+                </div>
+                {item.badge !== undefined && (
+                  <span className="bg-brand-orange text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      <div className="space-y-4">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 transition-all"
+        >
+          <Settings className="w-4.5 h-4.5 text-neutral-400" />
+          <span className="text-sm">Settings</span>
+        </Link>
+
+        <div className="flex items-center gap-3 border-t border-neutral-100 pt-4">
+          <div className="w-9 h-9 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-xs text-indigo-700 shadow-inner">
+            DP
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-neutral-900 truncate">Delhi Public School</p>
+            <p className="text-[10px] text-neutral-400 truncate">Bokaro Steel City</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
