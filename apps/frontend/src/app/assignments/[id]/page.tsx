@@ -35,6 +35,8 @@ export default function AssignmentDetailPage() {
           setActiveJobId(data.jobId);
           setJobStatus('generating');
           subscribeToJob(data.jobId);
+        } else if (data.status === 'failed') {
+          setJobStatus('failed');
         }
       } catch (err) {
         showToast((err as Error).message || 'Failed to sync assignment details', 'error');
