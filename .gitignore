@@ -28,6 +28,7 @@ apps/backend/uploads/
 # UI Designs & Documentation
 ui/
 *.md
+!README.md
 
 # OS & Editor junk
 .DS_Store
