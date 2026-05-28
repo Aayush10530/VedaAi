@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { env } from './config/env';
 import { connectDB } from './config/db';
 import { createApp } from './app';
-import { createServer } from 'http';
+import http from 'http';
 import { initSocket } from './websocket/socket';
 import { redis } from './config/redis';
 
@@ -11,7 +11,7 @@ async function main() {
     await connectDB();
 
     const app = createApp();
-    const httpServer = createServer(app);
+    const httpServer = http.createServer(app);
 
     const io = initSocket(httpServer);
 

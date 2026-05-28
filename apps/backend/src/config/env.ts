@@ -20,7 +20,8 @@ if (!envResult.success) {
   envResult.error.errors.forEach((err) => {
     console.error(`  - ${err.path.join('.')}: ${err.message}`);
   });
-  process.exit(1);
+  throw new Error('Invalid environment configuration. Exiting.');
 }
 
 export const env = envResult.data;
+
