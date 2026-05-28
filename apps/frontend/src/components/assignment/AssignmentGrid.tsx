@@ -23,13 +23,13 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
   });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-in-up">
       <div className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
         <span className="w-2 h-2 rounded-full bg-emerald-500 absolute" />
-        <h1 className="text-lg font-bold text-neutral-900 leading-none pl-2.5">Assignments</h1>
+        <h1 className="text-lg font-black text-neutral-900 leading-none pl-2.5">Assignments</h1>
       </div>
-      <p className="text-xs text-neutral-500 -mt-4 pl-4.5 font-medium">
+      <p className="text-xs text-neutral-500 -mt-4 pl-4.5 font-semibold">
         Manage and create assignments for your classes.
       </p>
 
@@ -37,37 +37,37 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setActiveFilter('all')}
-            className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`flex items-center gap-1.5 text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               activeFilter === 'all'
                 ? 'bg-neutral-900 border-neutral-950 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             <Filter className="w-3.5 h-3.5" /> All
           </button>
           <button
             onClick={() => setActiveFilter('complete')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               activeFilter === 'complete'
-                ? 'bg-emerald-500 border-emerald-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-emerald-550 bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             Complete
           </button>
           <button
             onClick={() => setActiveFilter('pending')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               activeFilter === 'pending'
-                ? 'bg-orange-500 border-orange-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-orange-550 bg-gradient-to-r from-brand-orange to-red-400 border-orange-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             Pending
           </button>
         </div>
 
-        <div className="flex items-center gap-2 border border-neutral-200 rounded-full px-4 py-2 bg-white w-full sm:w-64 focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-100 transition-all">
+        <div className="flex items-center gap-2 border border-white/30 rounded-full px-4 py-2 bg-white/35 backdrop-blur-md w-full sm:w-64 focus-within:border-brand-orange/40 focus-within:ring-4 focus-within:ring-orange-500/5 transition-all duration-300 shadow-sm">
           <Search className="w-4 h-4 text-neutral-400" />
           <input
             type="text"
@@ -80,8 +80,8 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-neutral-100 p-12 text-center">
-          <p className="text-sm font-semibold text-neutral-500">No matching assignments found</p>
+        <div className="glass-card rounded-2xl p-12 text-center border border-white/50 shadow-md">
+          <p className="text-sm font-bold text-neutral-500">No matching assignments found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -91,10 +91,10 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
         </div>
       )}
 
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-10 z-30">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-10 z-30 shadow-2xl">
         <button
           onClick={() => router.push('/assignments/new')}
-          className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-semibold px-6 py-3 rounded-full shadow-lg active:scale-95 transition-all"
+          className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-red-500 hover:from-orange-650 hover:to-red-600 text-white text-xs font-black px-6 py-3.5 rounded-full shadow-lg hover:shadow-orange-500/15 hover:scale-[1.03] active:scale-95 transition-all duration-300"
         >
           <Plus className="w-4 h-4" /> Create Assignment
         </button>

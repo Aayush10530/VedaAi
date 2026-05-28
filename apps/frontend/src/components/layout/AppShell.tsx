@@ -95,17 +95,17 @@ export function AppShell({ children }: AppShellProps) {
     : 'GT';
 
   return (
-    <div className="min-h-screen bg-neutral-200 text-neutral-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-transparent text-neutral-900 flex flex-col font-sans">
       <div className="hidden md:flex gap-3 p-3 flex-1 min-h-screen">
         <Sidebar />
 
-        <div className="flex-1 flex flex-col rounded-2xl overflow-hidden bg-white shadow-sm border border-neutral-100 h-[calc(100vh-24px)] sticky top-3">
-          <header className="h-14 bg-white border-b border-neutral-100 flex items-center justify-between px-6 z-30">
+        <div className="flex-1 flex flex-col rounded-2xl overflow-hidden glass-panel shadow-xl h-[calc(100vh-24px)] sticky top-3 border border-white/50 animate-fade-in-up">
+          <header className="h-14 bg-white/20 backdrop-blur-md border-b border-white/30 flex items-center justify-between px-6 z-30 shadow-sm">
             <div className="flex items-center gap-4 flex-1">
               <button
                 onClick={handleBack}
                 disabled={pathname === '/dashboard'}
-                className="p-2 hover:bg-neutral-50 rounded-full text-neutral-600 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                className="p-2 hover:bg-white/40 active:scale-95 rounded-full text-neutral-600 disabled:opacity-30 disabled:hover:bg-transparent transition-all duration-300"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -113,15 +113,15 @@ export function AppShell({ children }: AppShellProps) {
               {pathname.includes('/result') ? (
                 <button
                   onClick={handleCreateNew}
-                  className="flex items-center gap-2 px-4 py-2 border border-neutral-200 rounded-full text-xs font-semibold hover:bg-neutral-50 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 border border-white/40 bg-white/40 backdrop-blur-md rounded-full text-xs font-bold hover:bg-white/70 active:scale-95 hover:border-brand-orange/30 transition-all duration-300 shadow-sm"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-neutral-600" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#E8521A] animate-pulse" />
                   Create New
                 </button>
               ) : (
                 <div
-                  className={`flex items-center gap-2 border rounded-full px-4 py-2 bg-neutral-50 w-80 transition-all ${
-                     searchFocused ? 'border-emerald-500 ring-2 ring-emerald-100 bg-white' : 'border-neutral-200'
+                  className={`flex items-center gap-2 border rounded-full px-4 py-2 bg-white/30 backdrop-blur-md w-80 transition-all duration-300 ${
+                     searchFocused ? 'border-brand-orange/40 ring-4 ring-orange-500/5 bg-white/70 shadow-inner' : 'border-white/40 shadow-sm'
                   }`}
                 >
                   <Search className="w-4 h-4 text-neutral-400" />
@@ -137,34 +137,34 @@ export function AppShell({ children }: AppShellProps) {
             </div>
 
             <div className="flex items-center gap-5">
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white font-bold text-xs flex items-center justify-center shadow-inner">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-85 active:scale-98 transition-all duration-300 bg-white/30 border border-white/40 rounded-full py-1.5 pl-2.5 pr-4 shadow-sm backdrop-blur-md">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white font-black text-[10px] flex items-center justify-center shadow-md">
                   {userInitials}
                 </div>
-                <span className="text-sm font-medium text-neutral-800">{user?.name || 'Guest Teacher'}</span>
-                <ChevronDown className="w-4 h-4 text-neutral-400" />
+                <span className="text-xs font-bold text-neutral-800 tracking-tight">{user?.name || 'Guest Teacher'}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
               </div>
             </div>
           </header>
 
-          <main className="flex-1 bg-neutral-200 overflow-y-auto min-h-0 relative">
+          <main className="flex-1 bg-white/5 overflow-y-auto min-h-0 relative">
             {children}
           </main>
         </div>
       </div>
 
-      <div className="flex flex-col md:hidden min-h-screen">
+      <div className="flex flex-col md:hidden min-h-screen bg-transparent">
         <MobileHeader onToggleSidebar={() => setMobileMenuOpen(!mobileMenuOpen)} />
 
         {mobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/40 z-50 transition-all" onClick={() => setMobileMenuOpen(false)}>
-            <div className="w-64 h-full bg-white animate-in slide-in-from-left duration-200" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 transition-all duration-300" onClick={() => setMobileMenuOpen(false)}>
+            <div className="w-64 h-full glass-panel shadow-2xl animate-in slide-in-from-left duration-300" onClick={(e) => e.stopPropagation()}>
               <Sidebar />
             </div>
           </div>
         )}
 
-        <main className="flex-1 bg-neutral-200 pb-20 overflow-y-auto">
+        <main className="flex-1 bg-white/5 pb-20 overflow-y-auto">
           {children}
         </main>
 

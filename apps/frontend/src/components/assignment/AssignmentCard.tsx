@@ -54,7 +54,7 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white rounded-xl shadow-xs border border-neutral-100 p-5 relative hover:shadow-md hover:border-neutral-200 transition-all cursor-pointer group"
+      className="glass-card-hover rounded-2xl p-5 relative border border-white/50 shadow-sm cursor-pointer group animate-fade-in-up"
     >
       <div className="flex items-start justify-between mb-8">
         <div className="space-y-1.5 min-w-0 flex-1">
@@ -64,12 +64,12 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
             </h3>
             <span
               className={cn(
-                'text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 uppercase tracking-wider',
+                'text-[9px] font-black px-2 py-0.5 rounded-full inline-flex items-center gap-1 uppercase tracking-wider',
                 {
-                  'bg-orange-50 text-orange-600 border border-orange-100': assignment.status === 'pending',
-                  'bg-blue-50 text-blue-600 border border-blue-100': assignment.status === 'generating',
-                  'bg-emerald-50 text-emerald-600 border border-emerald-100': assignment.status === 'complete',
-                  'bg-red-50 text-red-600 border border-red-100': assignment.status === 'failed',
+                  'bg-orange-500/10 text-orange-650 border border-orange-500/20 shadow-inner': assignment.status === 'pending',
+                  'bg-blue-500/10 text-blue-650 border border-blue-500/20 shadow-inner': assignment.status === 'generating',
+                  'bg-emerald-500/10 text-emerald-650 border border-emerald-500/20 shadow-inner': assignment.status === 'complete',
+                  'bg-red-500/10 text-red-650 border border-red-500/20 shadow-inner': assignment.status === 'failed',
                 }
               )}
             >
@@ -77,7 +77,7 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
               {assignment.status}
             </span>
           </div>
-          <p className="text-xs text-neutral-400 font-medium">
+          <p className="text-xs text-neutral-450 font-bold">
             {assignment.subject} • Grade {assignment.grade}
           </p>
         </div>
@@ -88,39 +88,39 @@ export function AssignmentCard({ assignment }: AssignmentCardProps) {
               e.stopPropagation();
               setMenuOpen(!menuOpen);
             }}
-            className="p-1 hover:bg-neutral-50 rounded-lg text-neutral-400 hover:text-neutral-700 transition-colors"
+            className="p-1.5 hover:bg-white/40 rounded-lg text-neutral-400 hover:text-neutral-700 transition-colors"
           >
             <MoreVertical className="w-5 h-5" />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-8 bg-white rounded-xl shadow-lg border border-neutral-100 py-1.5 z-20 min-w-[150px] animate-in fade-in slide-in-from-top-1">
+            <div className="absolute right-0 top-8 glass-panel rounded-xl shadow-xl py-1.5 z-20 min-w-[150px] border border-white/50 bg-white/90 backdrop-blur-md animate-scale-in">
               <button
                 onClick={handleView}
-                className="w-full flex items-center gap-2 text-left px-3.5 py-2 text-xs font-semibold text-neutral-700 hover:bg-neutral-50"
+                className="w-full flex items-center gap-2 text-left px-3.5 py-2 text-xs font-bold text-neutral-700 hover:bg-white/60 transition-colors"
               >
-                <Eye className="w-4 h-4 text-neutral-400" />
-                View Assignment
+                <Eye className="w-4 h-4 text-neutral-450" />
+                View Details
               </button>
               <button
                 onClick={handleDelete}
-                className="w-full flex items-center gap-2 text-left px-3.5 py-2 text-xs font-semibold text-red-500 hover:bg-red-50 border-t border-neutral-50 mt-1"
+                className="w-full flex items-center gap-2 text-left px-3.5 py-2 text-xs font-bold text-red-500 hover:bg-red-50/50 border-t border-white/30 mt-1 transition-colors"
               >
                 <Trash2 className="w-4 h-4 text-red-400" />
-                Delete
+                Delete Paper
               </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-neutral-500 pt-3 border-t border-neutral-50">
-        <span className="inline-flex items-center gap-1">
+      <div className="flex items-center justify-between text-xs text-neutral-500 pt-3 border-t border-white/30">
+        <span className="inline-flex items-center gap-1 font-semibold text-[10px]">
           <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-          <strong className="text-neutral-700 font-semibold">Assigned on</strong> : {formatDate(assignment.createdAt)}
+          <strong className="text-neutral-700 font-bold">Assigned</strong>: {formatDate(assignment.createdAt)}
         </span>
-        <span className="inline-flex items-center gap-1">
-          <strong className="text-neutral-700 font-semibold">Due</strong> : {formatDate(assignment.dueDate)}
+        <span className="inline-flex items-center gap-1 font-semibold text-[10px]">
+          <strong className="text-neutral-700 font-bold">Due</strong>: {formatDate(assignment.dueDate)}
         </span>
       </div>
     </div>

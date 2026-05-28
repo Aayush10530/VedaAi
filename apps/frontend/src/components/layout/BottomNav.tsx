@@ -22,25 +22,25 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-neutral-900 border-t border-neutral-800 flex items-center justify-around px-4 z-40">
+    <nav className="md:hidden fixed bottom-3 left-3 right-3 h-14 bg-white/60 backdrop-blur-lg border border-white/40 rounded-2xl flex items-center justify-around px-4 z-40 shadow-lg">
       {items.map((item, idx) => {
         const Icon = item.icon;
         return (
           <Link
             key={idx}
             href={item.href}
-            className="flex flex-col items-center justify-center gap-1.5 py-1 text-center flex-1 transition-all"
+            className="flex flex-col items-center justify-center gap-1 py-1 text-center flex-1 transition-all active:scale-90"
           >
             <Icon
               className={cn(
-                'w-5 h-5 transition-colors',
-                item.active ? 'text-white' : 'text-neutral-500'
+                'w-4.5 h-4.5 transition-all duration-300',
+                item.active ? 'text-[#E8521A] scale-110' : 'text-neutral-500'
               )}
             />
             <span
               className={cn(
-                'text-[10px] font-medium transition-colors',
-                item.active ? 'text-white font-semibold' : 'text-neutral-500'
+                'text-[9px] font-bold transition-all duration-300 tracking-tight',
+                item.active ? 'text-[#E8521A]' : 'text-neutral-400'
               )}
             >
               {item.label}

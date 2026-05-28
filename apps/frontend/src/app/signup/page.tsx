@@ -47,17 +47,21 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#E8E8E8] px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-neutral-100 p-8 space-y-8 transition-all">
+    <div className="min-h-screen flex items-center justify-center bg-transparent px-4 py-12 relative overflow-hidden">
+      {/* Premium floating glassmorphism blobs */}
+      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#E8521A]/8 rounded-full blur-3xl -z-10 animate-pulse duration-[6000ms]" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl -z-10 animate-pulse duration-[8000ms]" />
+
+      <div className="w-full max-w-md glass-panel rounded-3xl shadow-2xl p-8 space-y-6 border border-white/50 animate-scale-in">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#E8521A] to-[#F97316] rounded-2xl shadow-md text-white font-black text-xl mb-2">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#E8521A] to-[#F97316] rounded-2xl shadow-md text-white font-black text-xl mb-1 hover:rotate-6 transition-transform duration-300">
             V
           </div>
           <h1 className="text-2xl font-bold text-neutral-900 tracking-tight flex items-center justify-center gap-2">
             Create Your Account
           </h1>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-neutral-400 font-medium">
             Join VedaAI to create curriculum-aligned assessments
           </p>
         </div>
@@ -65,7 +69,7 @@ export default function SignUpPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-neutral-600 pl-2">
+            <label className="text-xs font-bold text-neutral-600 pl-2">
               Full Name
             </label>
             <input
@@ -74,13 +78,13 @@ export default function SignUpPage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Dr. Sarah Jenkins"
               disabled={loading}
-              className="w-full px-5 py-2.5 rounded-full border border-neutral-200 focus:outline-none focus:border-[#E8521A] focus:ring-2 focus:ring-orange-100 bg-neutral-50 text-sm transition-all"
+              className="w-full px-5 py-2.5 rounded-full text-sm outline-none glass-input"
               required
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-neutral-600 pl-2">
+            <label className="text-xs font-bold text-neutral-600 pl-2">
               Email Address
             </label>
             <input
@@ -89,13 +93,13 @@ export default function SignUpPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="sarah.jenkins@school.edu"
               disabled={loading}
-              className="w-full px-5 py-2.5 rounded-full border border-neutral-200 focus:outline-none focus:border-[#E8521A] focus:ring-2 focus:ring-orange-100 bg-neutral-50 text-sm transition-all"
+              className="w-full px-5 py-2.5 rounded-full text-sm outline-none glass-input"
               required
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-neutral-600 pl-2">
+            <label className="text-xs font-bold text-neutral-600 pl-2">
               School Name
             </label>
             <input
@@ -104,13 +108,13 @@ export default function SignUpPage() {
               onChange={(e) => setSchoolName(e.target.value)}
               placeholder="Oakwood International Academy"
               disabled={loading}
-              className="w-full px-5 py-2.5 rounded-full border border-neutral-200 focus:outline-none focus:border-[#E8521A] focus:ring-2 focus:ring-orange-100 bg-neutral-50 text-sm transition-all"
+              className="w-full px-5 py-2.5 rounded-full text-sm outline-none glass-input"
               required
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-neutral-600 pl-2">
+            <label className="text-xs font-bold text-neutral-600 pl-2">
               Password
             </label>
             <div className="relative">
@@ -120,13 +124,13 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 6 characters"
                 disabled={loading}
-                className="w-full px-5 py-2.5 rounded-full border border-neutral-200 focus:outline-none focus:border-[#E8521A] focus:ring-2 focus:ring-orange-100 bg-neutral-50 text-sm transition-all pr-12"
+                className="w-full px-5 py-2.5 rounded-full text-sm outline-none glass-input pr-12"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 p-1"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#E8521A] p-1 transition-colors"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -136,7 +140,7 @@ export default function SignUpPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 mt-4 bg-gradient-to-r from-[#E8521A] to-[#F97316] hover:from-[#d14412] hover:to-[#ea580c] text-white text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+            className="w-full py-3.5 mt-4 bg-gradient-to-r from-[#E8521A] to-[#F97316] hover:from-[#d14412] hover:to-[#ea580c] text-white text-sm font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -151,11 +155,11 @@ export default function SignUpPage() {
 
         {/* Footer Link */}
         <div className="text-center pt-2">
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 font-medium">
             Already have an account?{' '}
             <Link
               href="/login"
-              className="text-[#E8521A] font-semibold hover:underline transition-all"
+              className="text-[#E8521A] font-bold hover:underline transition-all"
             >
               Sign In
             </Link>

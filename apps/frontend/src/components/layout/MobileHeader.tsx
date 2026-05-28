@@ -20,7 +20,7 @@ export function MobileHeader({ onToggleSidebar }: MobileHeaderProps) {
     : 'GT';
 
   return (
-    <header className="md:hidden h-14 bg-white border-b border-neutral-100 flex items-center justify-between px-4 z-40 sticky top-0">
+    <header className="md:hidden h-14 bg-white/40 backdrop-blur-lg border-b border-white/30 flex items-center justify-between px-4 z-40 sticky top-0 shadow-sm">
       <Link href="/dashboard" className="flex items-center gap-2">
         <div className="w-7 h-7 bg-gradient-to-br from-brand-orange to-red-600 rounded-lg flex items-center justify-center">
           <span className="text-white font-black text-xs">V</span>

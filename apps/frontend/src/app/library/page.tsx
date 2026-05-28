@@ -70,14 +70,14 @@ export default function MyLibraryPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
         <span className="w-2 h-2 rounded-full bg-emerald-500 absolute" />
-        <h1 className="text-lg font-bold text-neutral-900 leading-none pl-2.5">My Library</h1>
+        <h1 className="text-lg font-black text-neutral-900 leading-none pl-2.5">My Library</h1>
       </div>
-      <p className="text-xs text-neutral-500 -mt-4 pl-4.5 font-medium">
+      <p className="text-xs text-neutral-500 -mt-4 pl-4.5 font-semibold">
         Your digital resource vault. Store reusable templates, reference guides, question pools, and drafts.
       </p>
 
@@ -86,50 +86,50 @@ export default function MyLibraryPage() {
         <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               selectedCategory === 'all'
                 ? 'bg-neutral-900 border-neutral-950 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             All Resources
           </button>
           <button
             onClick={() => setSelectedCategory('template')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               selectedCategory === 'template'
-                ? 'bg-blue-500 border-blue-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-blue-550 bg-gradient-to-r from-blue-500 to-indigo-500 border-blue-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             Templates
           </button>
           <button
             onClick={() => setSelectedCategory('qbank')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               selectedCategory === 'qbank'
-                ? 'bg-emerald-500 border-emerald-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-emerald-550 bg-gradient-to-r from-emerald-500 to-teal-500 border-emerald-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             Question Pools
           </button>
           <button
             onClick={() => setSelectedCategory('pdf')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               selectedCategory === 'pdf'
-                ? 'bg-purple-500 border-purple-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-purple-550 bg-gradient-to-r from-purple-500 to-pink-500 border-purple-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             PDF References
           </button>
           <button
             onClick={() => setSelectedCategory('draft')}
-            className={`text-xs font-semibold px-4 py-2 border rounded-full transition-all ${
+            className={`text-xs font-bold px-4 py-2 border rounded-full transition-all duration-300 shadow-sm active:scale-95 ${
               selectedCategory === 'draft'
-                ? 'bg-amber-500 border-amber-600 text-white'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-amber-550 bg-gradient-to-r from-amber-500 to-orange-500 border-amber-600 text-white'
+                : 'border-white/40 bg-white/40 text-neutral-600 hover:bg-white/70'
             }`}
           >
             Drafts
@@ -137,7 +137,7 @@ export default function MyLibraryPage() {
         </div>
 
         <div className="flex items-center gap-3 w-full xl:w-auto">
-          <div className="flex items-center gap-2 border border-neutral-200 rounded-full px-4 py-2 bg-white flex-1 xl:w-64 focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-100 transition-all">
+          <div className="flex items-center gap-2 border border-white/30 rounded-full px-4 py-2 bg-white/30 backdrop-blur-md flex-1 xl:w-64 focus-within:border-brand-orange/40 focus-within:ring-4 focus-within:ring-orange-500/5 transition-all duration-300 shadow-sm">
             <Search className="w-4 h-4 text-neutral-400" />
             <input
               type="text"
@@ -150,7 +150,7 @@ export default function MyLibraryPage() {
 
           <button
             onClick={() => setShowUploadZone(!showUploadZone)}
-            className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-red-500 hover:from-orange-600 hover:to-red-650 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow hover:scale-[1.02] active:scale-95 transition-all duration-300 whitespace-nowrap"
           >
             <UploadCloud className="w-4 h-4" /> Upload Reference
           </button>
@@ -159,23 +159,23 @@ export default function MyLibraryPage() {
 
       {/* Upload Zone Dropdown */}
       {showUploadZone && (
-        <div className="bg-white rounded-2xl border-2 border-dashed border-neutral-300 p-8 text-center animate-in slide-in-from-top-4 duration-200">
-          <UploadCloud className="w-8 h-8 text-neutral-400 mx-auto mb-3" />
+        <div className="glass-card rounded-2xl border-2 border-dashed border-white/60 p-8 text-center shadow-lg animate-fade-in-up">
+          <UploadCloud className="w-8 h-8 text-[#E8521A] mx-auto mb-3 animate-bounce" />
           <p className="text-xs font-bold text-neutral-800">Drag & Drop reference textbook pages or materials here</p>
-          <p className="text-[10px] text-neutral-400 mt-1">Accepts PDF, TXT or Markdown up to 10MB</p>
+          <p className="text-[10px] text-neutral-400 mt-1 font-semibold">Accepts PDF, TXT or Markdown up to 10MB</p>
           <div className="mt-4 flex justify-center gap-2">
             <button
               onClick={() => {
                 setShowUploadZone(false);
                 showToast('Reference file uploaded & added to library!', 'success');
               }}
-              className="px-5 py-2 bg-neutral-900 text-white text-xs font-semibold rounded-full shadow hover:bg-neutral-800 transition-all"
+              className="px-5 py-2 bg-neutral-900 text-white text-xs font-semibold rounded-full shadow hover:bg-neutral-800 transition-all duration-300 active:scale-95"
             >
               Browse Files
             </button>
             <button
               onClick={() => setShowUploadZone(false)}
-              className="px-4 py-2 border border-neutral-200 text-neutral-700 text-xs font-semibold rounded-full hover:bg-neutral-50 transition-all"
+              className="px-4 py-2 border border-white/40 bg-white/20 text-neutral-700 text-xs font-semibold rounded-full hover:bg-white/40 transition-all duration-300"
             >
               Cancel
             </button>
@@ -188,7 +188,7 @@ export default function MyLibraryPage() {
         {filteredResources.map((resource) => (
           <div
             key={resource.id}
-            className="bg-white rounded-xl border border-neutral-100 shadow-sm p-5 hover:shadow-md transition-all flex flex-col justify-between"
+            className="glass-card-hover rounded-2xl border border-white/50 shadow-sm p-5 flex flex-col justify-between"
           >
             <div>
               <div className="flex justify-between items-start">
@@ -196,21 +196,21 @@ export default function MyLibraryPage() {
                   {getCategoryLabel(resource.category)}
                 </span>
                 {resource.size && (
-                  <span className="text-[10px] text-neutral-400 font-medium">
+                  <span className="text-[10px] text-neutral-400 font-bold">
                     {resource.size}
                   </span>
                 )}
               </div>
 
               <h3 className="font-bold text-neutral-950 text-sm mt-3 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-neutral-400" /> {resource.title}
+                <FileText className="w-4 h-4 text-neutral-450" /> {resource.title}
               </h3>
-              <p className="text-xs text-neutral-500 mt-1.5 leading-relaxed font-medium">
+              <p className="text-xs text-neutral-500 mt-1.5 leading-relaxed font-semibold">
                 {resource.description}
               </p>
             </div>
 
-            <div className="flex items-center justify-between mt-5 pt-3.5 border-t border-neutral-50">
+            <div className="flex items-center justify-between mt-5 pt-3.5 border-t border-white/30">
               <span className="text-[10px] text-neutral-400 font-bold">
                 ADDED: {resource.addedDate}
               </span>
@@ -218,21 +218,21 @@ export default function MyLibraryPage() {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => showToast('Preview loading...', 'success')}
-                  className="p-2 hover:bg-neutral-50 border border-neutral-100 rounded-full text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="p-2 hover:bg-white/60 border border-white/30 rounded-full text-neutral-600 hover:text-neutral-900 transition-colors"
                   title="View Details"
                 >
                   <Eye className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => showToast('Resource downloaded!', 'success')}
-                  className="p-2 hover:bg-neutral-50 border border-neutral-100 rounded-full text-neutral-600 hover:text-neutral-900 transition-colors"
+                  className="p-2 hover:bg-white/60 border border-white/30 rounded-full text-neutral-600 hover:text-neutral-900 transition-colors"
                   title="Download File"
                 >
                   <Download className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => handleDelete(resource.id)}
-                  className="p-2 hover:bg-red-50 border border-red-100 rounded-full text-red-500 hover:text-red-700 transition-colors"
+                  className="p-2 hover:bg-red-50/50 border border-red-100 rounded-full text-red-500 hover:text-red-700 transition-colors"
                   title="Delete Resource"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -243,17 +243,17 @@ export default function MyLibraryPage() {
         ))}
 
         {filteredResources.length === 0 && (
-          <div className="col-span-1 md:col-span-2 bg-white rounded-2xl border border-neutral-100 p-12 text-center space-y-4 shadow-sm max-w-md mx-auto mt-6">
-            <div className="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto text-indigo-500">
-              <FolderHeart className="w-8 h-8" />
+          <div className="col-span-1 md:col-span-2 glass-card rounded-2xl border border-white/50 p-12 text-center space-y-4 shadow-lg max-w-md mx-auto mt-6 animate-scale-in">
+            <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto text-indigo-650 shadow-inner">
+              <FolderHeart className="w-8 h-8 animate-pulse" />
             </div>
             <h3 className="font-bold text-lg text-neutral-800">Your Resource Vault</h3>
-            <p className="text-xs text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-neutral-450 font-bold max-w-sm mx-auto leading-relaxed">
               Store syllabus books, custom exam templates, reference PDFs, and question pools to customize AI paper generation in seconds.
             </p>
             <button
               onClick={() => setShowUploadZone(true)}
-              className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all mx-auto"
+              className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-red-500 hover:from-orange-600 hover:to-red-650 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow hover:scale-[1.02] active:scale-95 transition-all duration-300 mx-auto"
             >
               <UploadCloud className="w-4 h-4" /> Upload Reference
             </button>
@@ -262,18 +262,18 @@ export default function MyLibraryPage() {
       </div>
 
       {/* Direct Add Card Action */}
-      <div className="rounded-2xl bg-neutral-900 p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 shadow">
+      <div className="rounded-2xl bg-gradient-to-r from-neutral-900/90 to-brand-dark/95 backdrop-blur-md p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 shadow-lg border border-white/10">
         <div>
           <h4 className="font-bold text-sm flex items-center gap-1.5">
-            <BookOpen className="w-4 h-4 text-emerald-400 animate-pulse" /> Need custom-structured exams?
+            <BookOpen className="w-4 h-4 text-emerald-450 animate-pulse" /> Need custom-structured exams?
           </h4>
-          <p className="text-xs text-neutral-300 mt-1 font-medium">
+          <p className="text-xs text-neutral-300 mt-1 font-semibold">
             Save custom layouts and exam outlines directly to templates. You can mix & match question matrices.
           </p>
         </div>
         <button
           onClick={handleCreateResource}
-          className="flex items-center justify-center gap-1.5 bg-white text-neutral-950 text-xs font-bold px-4 py-2.5 rounded-full hover:bg-neutral-100 transition-all whitespace-nowrap"
+          className="flex items-center justify-center gap-1.5 bg-white text-neutral-950 text-xs font-bold px-4 py-2.5 rounded-full hover:bg-neutral-100 transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:scale-[1.02]"
         >
           <Plus className="w-3.5 h-3.5" /> Create Exam Template
         </button>
