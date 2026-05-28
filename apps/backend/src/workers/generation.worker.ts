@@ -12,6 +12,7 @@ import { emitJobProgress, emitJobComplete, emitJobFailed } from '../websocket/jo
 import type { Assignment } from '@vedaai/shared'
 import type { QuestionPaperResult } from '../models/Assignment.model'
 import { env } from '../config/env'
+import { CacheKeys } from '../services/cache.service'
 
 interface GenerationJobData {
   assignmentId: string
@@ -29,6 +30,7 @@ const worker = new Worker<GenerationJobData>(
   async (job: Job<GenerationJobData>) => {
     const { assignmentId } = job.data
     const jobId = job.id!
+    let userId: string | undefined
 
     try {
       // Step 1: Fetch assignment
@@ -37,6 +39,7 @@ const worker = new Worker<GenerationJobData>(
       if (!assignment) {
         throw new Error(`Assignment ${assignmentId} not found`)
       }
+      userId = assignment.userId.toString()
 
       // Step 2: Mark as generating
       assignment.status = 'generating'
@@ -110,9 +113,11 @@ const worker = new Worker<GenerationJobData>(
       await assignment.save()
 
       // Step 9: Cache the full result (including assignmentId)
-      await redis.setex(`result:${assignmentId}`, 3600, JSON.stringify(paperForCache))
-      await redis.del('assignment:list')
-      await redis.del(`assignment:${assignmentId}`)
+      await redis.setex(CacheKeys.assignmentResult(assignmentId), 3600, JSON.stringify(paperForCache))
+      if (userId) {
+        await redis.del(CacheKeys.assignmentList(userId))
+      }
+      await redis.del(CacheKeys.assignmentDetail(assignmentId))
 
       // Step 10: Notify frontend
       // BUG A FIX: Emit 100% FIRST, then complete.
@@ -129,8 +134,10 @@ const worker = new Worker<GenerationJobData>(
 
       try {
         await AssignmentModel.findByIdAndUpdate(assignmentId, { status: 'failed' })
-        await redis.del('assignment:list')
-        await redis.del(`assignment:${assignmentId}`)
+        if (userId) {
+          await redis.del(CacheKeys.assignmentList(userId))
+        }
+        await redis.del(CacheKeys.assignmentDetail(assignmentId))
       } catch (dbErr) {
         console.error('[Worker] Failed to write failure status to DB:', dbErr)
       }
