@@ -73,6 +73,7 @@ export interface QuestionPaperResult {
 }
 
 export interface AssignmentDocument extends Document {
+  userId: mongoose.Types.ObjectId;
   title: string;
   subject: string;
   grade: string;
@@ -93,6 +94,11 @@ export interface AssignmentDocument extends Document {
 
 const AssignmentSchema = new Schema<AssignmentDocument>(
   {
+    userId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
+    },
     title: { type: String, required: true, trim: true },
     subject: { type: String, required: true, trim: true },
     grade: { type: String, required: true, trim: true },
@@ -114,5 +120,7 @@ const AssignmentSchema = new Schema<AssignmentDocument>(
   },
   { timestamps: true }
 );
+
+AssignmentSchema.index({ userId: 1, createdAt: -1 });
 
 export const AssignmentModel = mongoose.model<AssignmentDocument>('Assignment', AssignmentSchema);

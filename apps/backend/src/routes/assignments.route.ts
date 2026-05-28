@@ -1,8 +1,12 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 import { assignmentsController } from '../controllers/assignments.controller'
+import { protect } from '../middleware/auth'
 
 export const assignmentsRouter = Router()
+
+// Apply protect middleware to all routes in this router
+assignmentsRouter.use(protect)
 
 // Rate limiter: max 5 generation requests per IP per minute
 const generateLimiter = rateLimit({

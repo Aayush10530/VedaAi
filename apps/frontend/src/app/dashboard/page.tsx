@@ -18,6 +18,7 @@ import {
 import { useAssignmentStore } from '../../store/assignmentStore';
 import { useAssignment } from '../../hooks/useAssignment';
 import { useUiStore } from '../../store/uiStore';
+import { useAuthStore } from '../../store/authStore';
 import { EmptyState } from '../../components/assignment/EmptyState';
 import { Spinner } from '../../components/ui/Spinner';
 
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const { fetchAssignments } = useAssignment();
   const assignments = useAssignmentStore((state) => state.assignments);
+  const user = useAuthStore((state) => state.user);
   const isLoading = useUiStore((state) => state.isLoading);
   const { showToast } = useUiStore();
 
@@ -44,9 +46,9 @@ export default function DashboardPage() {
     return <EmptyState />;
   }
 
-  const totalAssignments = assignments.length || 10;
-  const completeAssignments = assignments.filter((a) => a.status === 'complete').length || 6;
-  const generatingAssignments = assignments.filter((a) => a.status === 'generating').length || 0;
+  const totalAssignments = assignments.length;
+  const completeAssignments = assignments.filter((a) => a.status === 'complete').length;
+  const generatingAssignments = assignments.filter((a) => a.status === 'generating').length;
 
   const stats = [
     {
@@ -58,65 +60,85 @@ export default function DashboardPage() {
     },
     {
       label: 'Class Groups',
-      value: 4,
+      value: 0,
       icon: Users,
-      desc: '38 average roster count',
+      desc: 'No groups created yet',
       color: 'text-emerald-600 bg-emerald-50 border-emerald-100',
     },
     {
       label: 'Stored Templates',
-      value: 3,
+      value: 0,
       icon: FolderHeart,
-      desc: 'Across 4 separate subjects',
+      desc: 'No templates stored yet',
       color: 'text-purple-600 bg-purple-50 border-purple-100',
     },
     {
       label: 'Success Metrics',
-      value: '83%',
+      value: '--',
       icon: TrendingUp,
-      desc: '+2.4% overall grade bump',
+      desc: 'Awaiting grading submissions',
       color: 'text-amber-600 bg-amber-50 border-amber-100',
     },
   ];
 
-  const recentActivity = [
-    {
-      type: 'complete',
-      text: 'AI generated "Quiz on Electricity" successfully',
-      time: '10 minutes ago',
-      icon: CheckCircle2,
-      color: 'text-emerald-500 bg-emerald-50',
-    },
-    {
-      type: 'submission',
-      text: 'Grade 10-A: 12 new student submissions evaluated',
-      time: '1 hour ago',
-      icon: Users,
-      color: 'text-indigo-500 bg-indigo-50',
-    },
-    {
-      type: 'library',
-      text: 'Uploaded textbook "NCERT Kinematics Notes.pdf" to Library',
-      time: '3 hours ago',
-      icon: FolderHeart,
-      color: 'text-purple-500 bg-purple-50',
-    },
-  ];
+  const recentActivity = assignments.slice(0, 5).map((a) => {
+    const isComplete = a.status === 'complete';
+    const isFailed = a.status === 'failed';
+    const isGenerating = a.status === 'generating';
+    
+    let text = `Created assessment "${a.title}"`;
+    let icon = BookOpen;
+    let color = 'text-indigo-500 bg-indigo-50';
+    
+    if (isComplete) {
+      text = `AI generated "${a.title}" successfully`;
+      icon = CheckCircle2;
+      color = 'text-emerald-500 bg-emerald-50';
+    } else if (isFailed) {
+      text = `AI generation of "${a.title}" failed`;
+      icon = AlertCircle;
+      color = 'text-red-500 bg-red-50';
+    } else if (isGenerating) {
+      text = `AI is generating "${a.title}"...`;
+      icon = Clock;
+      color = 'text-amber-500 bg-amber-50';
+    }
+    
+    const timeAgo = a.createdAt 
+      ? new Date(a.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+      : 'Recently';
+      
+    return {
+      type: a.status,
+      text,
+      time: timeAgo,
+      icon,
+      color,
+    };
+  });
 
-  const upcomingExams = [
-    {
-      title: 'CBSE Midterm Mock Assessment',
-      class: 'Grade 8-B (Math)',
-      date: 'Due in 2 days',
-      marks: '60 Marks',
-    },
-    {
-      title: 'Thermodynamics Short Quiz',
-      class: 'Grade 11-A (Physics)',
-      date: 'Due in 4 days',
-      marks: '20 Marks',
-    },
-  ];
+  const upcomingExams = assignments
+    .filter((a) => {
+      if (!a.dueDate) return false;
+      const due = new Date(a.dueDate).getTime();
+      return due > Date.now();
+    })
+    .slice(0, 3)
+    .map((a) => {
+      const due = new Date(a.dueDate);
+      const timeDiff = due.getTime() - Date.now();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      const dateText = daysDiff === 1 ? 'Due tomorrow' : `Due in ${daysDiff} days`;
+      
+      const totalMarks = a.questionConfig?.reduce((acc, q) => acc + (q.count * q.marksEach), 0) || 0;
+      
+      return {
+        title: a.title,
+        class: `${a.grade} (${a.subject})`,
+        date: dateText,
+        marks: `${totalMarks} Marks`,
+      };
+    });
 
   return (
     <div className="p-6 space-y-6">
@@ -127,7 +149,7 @@ export default function DashboardPage() {
         </div>
         <div className="space-y-1 z-10">
           <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-400">School Admin Portal</span>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Welcome back, John Doe!</h2>
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Welcome back, {user?.name || 'Guest Teacher'}!</h2>
           <p className="text-xs text-neutral-300 max-w-xl font-medium leading-relaxed">
             Configure assessments, manage student class groups, and let VedaAI automate standard question paper creations in seconds.
           </p>
@@ -216,27 +238,34 @@ export default function DashboardPage() {
               🔔 Recent Notifications & Activities
             </h3>
             <div className="space-y-3.5">
-              {recentActivity.map((activity, idx) => {
-                const Icon = activity.icon;
-                return (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-3.5 p-3 rounded-xl hover:bg-neutral-50/80 border border-transparent hover:border-neutral-100 transition-all"
-                  >
-                    <div className={`p-2 rounded-lg ${activity.color} shrink-0`}>
-                      <Icon className="w-4 h-4" />
+              {recentActivity.length === 0 ? (
+                <div className="text-center py-6 text-neutral-400">
+                  <p className="text-xs font-semibold">No recent activity detected.</p>
+                  <p className="text-[10px] text-neutral-400 mt-1">Generated assessments will appear here.</p>
+                </div>
+              ) : (
+                recentActivity.map((activity, idx) => {
+                  const Icon = activity.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3.5 p-3 rounded-xl hover:bg-neutral-50/80 border border-transparent hover:border-neutral-100 transition-all"
+                    >
+                      <div className={`p-2 rounded-lg ${activity.color} shrink-0`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <p className="text-xs font-bold text-neutral-800 leading-tight">
+                          {activity.text}
+                        </p>
+                        <span className="text-[10px] text-neutral-400 font-semibold flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {activity.time}
+                        </span>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1 space-y-0.5">
-                      <p className="text-xs font-bold text-neutral-800 leading-tight">
-                        {activity.text}
-                      </p>
-                      <span className="text-[10px] text-neutral-400 font-semibold flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {activity.time}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
@@ -248,26 +277,33 @@ export default function DashboardPage() {
               📅 Upcoming Assessment Calendar
             </h3>
             <div className="space-y-3">
-              {upcomingExams.map((exam, idx) => (
-                <div
-                  key={idx}
-                  className="p-3.5 rounded-xl border border-neutral-100 bg-neutral-50/40 hover:bg-neutral-50 transition-all space-y-1.5"
-                >
-                  <div className="flex justify-between items-start">
-                    <span className="text-[9px] uppercase font-bold tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
-                      {exam.class}
-                    </span>
-                    <span className="text-[10px] text-neutral-400 font-bold">{exam.marks}</span>
-                  </div>
-                  <h4 className="font-bold text-xs text-neutral-800 leading-snug">
-                    {exam.title}
-                  </h4>
-                  <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-400">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{exam.date}</span>
-                  </div>
+              {upcomingExams.length === 0 ? (
+                <div className="text-center py-6 text-neutral-400">
+                  <p className="text-xs font-semibold">No upcoming assessments</p>
+                  <p className="text-[10px] text-neutral-400 mt-1">Assignments with future due dates will list here.</p>
                 </div>
-              ))}
+              ) : (
+                upcomingExams.map((exam, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-xl border border-neutral-100 bg-neutral-50/40 hover:bg-neutral-50 transition-all space-y-1.5"
+                  >
+                    <div className="flex justify-between items-start">
+                      <span className="text-[9px] uppercase font-bold tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+                        {exam.class}
+                      </span>
+                      <span className="text-[10px] text-neutral-400 font-bold">{exam.marks}</span>
+                    </div>
+                    <h4 className="font-bold text-xs text-neutral-800 leading-snug">
+                      {exam.title}
+                    </h4>
+                    <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-400">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{exam.date}</span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             <button

@@ -2,7 +2,7 @@ import type { Assignment, QuestionConfig } from '@vedaai/shared';
 import { QUESTION_TYPE_LABELS } from '@vedaai/shared';
 
 export function buildPrompt(
-  assignment: Omit<Partial<Assignment>, '_id'> & { _id?: unknown },
+  assignment: Partial<Assignment>,
   extractedText?: string
 ): string {
   const totalMarks = assignment.questionConfig!.reduce(

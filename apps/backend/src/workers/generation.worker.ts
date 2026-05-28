@@ -68,7 +68,7 @@ const worker = new Worker<GenerationJobData>(
       // Step 4: Build prompt
       // BUG 3 FIX: flattenObjectIds converts ObjectId fields to strings
       await emitJobProgress(jobId, 'Structuring AI prompt parameters...', 40)
-      const assignmentPlain = assignment.toObject({ flattenObjectIds: true }) as Omit<Partial<Assignment>, '_id'> & { _id?: unknown }
+      const assignmentPlain = assignment.toObject({ flattenObjectIds: true }) as unknown as Partial<Assignment>
       const prompt = buildPrompt(assignmentPlain, extractedText)
 
       // Step 5: Call Groq AI

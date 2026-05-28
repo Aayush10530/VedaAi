@@ -8,12 +8,12 @@ import type { CreateAssignmentInput } from '@vedaai/shared'
 
 export const assignmentService = {
 
-  async findAll(): Promise<AssignmentDocument[]> {
-    const cacheKey = 'assignment:list'
+  async findAll(userId: string): Promise<AssignmentDocument[]> {
+    const cacheKey = `assignment:list:${userId}`
     const cached = await cacheService.get<AssignmentDocument[]>(cacheKey)
     if (cached) return cached
 
-    const assignments = await AssignmentModel.find()
+    const assignments = await AssignmentModel.find({ userId })
       .sort({ createdAt: -1 })
       .lean<AssignmentDocument[]>()
       .exec()
@@ -22,9 +22,9 @@ export const assignmentService = {
     return assignments
   },
 
-  async create(input: CreateAssignmentInput): Promise<AssignmentDocument> {
-    const assignment = await AssignmentModel.create(input)
-    await cacheService.del('assignment:list')
+  async create(input: CreateAssignmentInput, userId: string): Promise<AssignmentDocument> {
+    const assignment = await AssignmentModel.create({ ...input, userId })
+    await cacheService.del(`assignment:list:${userId}`)
     return assignment.toObject() as AssignmentDocument
   },
 
@@ -55,7 +55,7 @@ export const assignmentService = {
       if (!job && updatedAt < fiveMinutesAgo) {
         assignment.status = 'failed'
         await assignment.save()
-        await cacheService.del('assignment:list')
+        await cacheService.del(`assignment:list:${assignment.userId.toString()}`)
         await cacheService.del(cacheKey)
       }
     }
@@ -65,17 +65,18 @@ export const assignmentService = {
     return plain
   },
 
-  async delete(id: string): Promise<void> {
-    const result = await AssignmentModel.findByIdAndDelete(id).exec()
-    if (!result) {
+  async delete(id: string, userId: string): Promise<void> {
+    const assignment = await AssignmentModel.findById(id).exec()
+    if (!assignment) {
       throw new NotFoundError(`Assignment ${id} not found`)
     }
-    await cacheService.del('assignment:list')
+    await assignment.deleteOne()
+    await cacheService.del(`assignment:list:${userId}`)
     await cacheService.del(`assignment:${id}`)
     await cacheService.del(`result:${id}`)
   },
 
-  async enqueueJob(id: string): Promise<string> {
+  async enqueueJob(id: string, userId: string): Promise<string> {
     const assignment = await AssignmentModel.findById(id).exec()
     if (!assignment) {
       throw new NotFoundError(`Assignment ${id} not found`)
@@ -115,7 +116,7 @@ export const assignmentService = {
     assignment.status = 'generating'
     await assignment.save()
 
-    await cacheService.del('assignment:list')
+    await cacheService.del(`assignment:list:${userId}`)
     await cacheService.del(`assignment:${id}`)
 
     // BUG 11 FIX: Emit job:queued so frontend knows to start the progress screen

@@ -4,6 +4,7 @@ import { redis } from '../config/redis';
 import { assignmentsRouter } from './assignments.route';
 import { uploadRouter } from './upload.route';
 import { jobsRouter } from './jobs.route';
+import { authRouter } from './auth.route';
 
 export const routes = Router();
 
@@ -21,6 +22,7 @@ routes.get('/health', (_req, res) => {
   });
 });
 
+routes.use('/auth', authRouter);
 routes.use('/assignments', assignmentsRouter);
 routes.use('/upload', uploadRouter);
 routes.use('/jobs', jobsRouter);

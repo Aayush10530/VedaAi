@@ -10,6 +10,8 @@ const EnvSchema = z.object({
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_FILE_SIZE_MB: z.string().default('10').transform(Number),
   ASSIGNED_BY: z.string().default('Aayush'),
+  JWT_SECRET: z.string().min(10, 'JWT_SECRET must be at least 10 characters'),
+  JWT_EXPIRES_IN: z.string().default('7d'),
 });
 
 let validatedEnv: z.infer<typeof EnvSchema>;
