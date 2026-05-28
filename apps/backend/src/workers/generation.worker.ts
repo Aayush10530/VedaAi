@@ -130,12 +130,14 @@ const worker = new Worker<GenerationJobData>(
     connection: {
       host: redisUrl.hostname,
       port: Number(redisUrl.port) || 6379,
+      username: redisUrl.username ? decodeURIComponent(redisUrl.username) : undefined,
+      password: redisUrl.password ? decodeURIComponent(redisUrl.password) : undefined,
       maxRetriesPerRequest: null,
+      ...(redisUrl.protocol === 'rediss:' ? { tls: {} } : {}),
     },
     concurrency: 2,
   }
 )
-
 worker.on('ready', () => {
   console.log('[Worker] Generation worker ready — listening for jobs...')
 })
