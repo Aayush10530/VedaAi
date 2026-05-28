@@ -31,8 +31,6 @@ export const assignmentService = {
   async findById(id: string): Promise<AssignmentDocument> {
     const cacheKey = CacheKeys.assignmentDetail(id)
 
-    // Never serve cached version for generating assignments —
-    // we need live status so the stale-job check below runs
     const cached = await cacheService.get<AssignmentDocument>(cacheKey)
     if (cached && cached.status !== 'generating') {
       return cached
@@ -43,12 +41,8 @@ export const assignmentService = {
       throw new NotFoundError(`Assignment ${id} not found`)
     }
 
-    // BUG C FIX: Only auto-fail if STILL generating AND the job is gone
-    // AND it has been generating for more than 5 minutes.
-    // Without the timeout guard, a just-completed job (removed by removeOnComplete)
-    // would cause getJob() to return null and incorrectly mark the assignment as failed.
     if (assignment.status === 'generating' && assignment.jobId) {
-      const job = await generationQueue.getJob(assignment.jobId)   // BUG 1 FIX: use assignment.jobId
+      const job = await generationQueue.getJob(assignment.jobId)
       const updatedAt = new Date(assignment.updatedAt).getTime()
       const fiveMinutesAgo = Date.now() - 5 * 60 * 1000
 
@@ -82,7 +76,6 @@ export const assignmentService = {
       throw new NotFoundError(`Assignment ${id} not found`)
     }
 
-    // BUG 1 FIX: use assignment.jobId, not id
     if (assignment.status === 'generating' && assignment.jobId) {
       const job = await generationQueue.getJob(assignment.jobId)
       if (job) {
@@ -97,9 +90,6 @@ export const assignmentService = {
       }
     }
 
-    // BUG 1 FIX: Clean up any lingering failed job before re-enqueueing.
-    // Without this, addGenerationJob throws "Job already exists" because
-    // removeOnFail: false keeps the failed job with id = assignmentId.
     if (assignment.jobId) {
       const existingJob = await generationQueue.getJob(assignment.jobId)
       if (existingJob) {
@@ -119,7 +109,6 @@ export const assignmentService = {
     await cacheService.del(CacheKeys.assignmentList(userId))
     await cacheService.del(CacheKeys.assignmentDetail(id))
 
-    // BUG 11 FIX: Emit job:queued so frontend knows to start the progress screen
     await emitJobQueued(jobId, id)
 
     return jobId

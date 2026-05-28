@@ -13,19 +13,20 @@
 ---
 
 ## 📖 Table of Contents
-1. [System Overview & Architecture](#-system-overview--architecture)
-2. [Premium Product Features](#-premium-product-features)
-3. [Technology Stack](#-technology-stack)
-4. [Monorepo Directory Structure](#-monorepo-directory-structure)
-5. [API Endpoint Specifications](#-api-endpoint-specifications)
-6. [WebSocket Pipeline Specs](#-websocket-pipeline-specs)
-7. [Step-by-Step Installation & Run Guide](#-step-by-step-installation--run-guide)
-8. [Advanced Security & Resilience Layer](#-advanced-security--resilience-layer)
-9. [Development & Code Quality Check](#-development--code-quality-check)
+1. [Architecture Overview](#-architecture-overview)
+2. [Technical Approach](#-technical-approach)
+3. [Premium Product Features](#-premium-product-features)
+4. [Technology Stack](#-technology-stack)
+5. [Monorepo Directory Structure](#-monorepo-directory-structure)
+6. [API Endpoint Specifications](#-api-endpoint-specifications)
+7. [WebSocket Pipeline Specs](#-websocket-pipeline-specs)
+8. [Step-by-Step Installation & Run Guide](#-step-by-step-installation--run-guide)
+9. [Advanced Security & Resilience Layer](#-advanced-security--resilience-layer)
+10. [Development & Code Quality Check](#-development--code-quality-check)
 
 ---
 
-## 🌌 System Overview & Architecture
+## 🌌 Architecture Overview
 
 VedaAI is architected around a layered, reactive monorepo design that decouples expensive AI operations from standard REST endpoint lifecycles. It utilizes standard workspace structures (`npm workspaces`) to link shared schemas and type declarations across frontend and backend boundaries.
 
@@ -60,6 +61,18 @@ VedaAI is architected around a layered, reactive monorepo design that decouples 
                      │ per User Session       │      │ Prompt Engine + Parser   │
                      └────────────────────────┘      └──────────────────────────┘
 ```
+
+---
+
+## 🧠 Technical Approach
+
+VedaAI's implementation is guided by five primary engineering principles that ensure optimal system stability, security, and velocity:
+
+1. **Layered Monorepo Decoupling**: We isolate high-cost operations (such as Llama 3 generative model inference or complex PDF extraction) from the web server thread. The API Gateway strictly schedules work in BullMQ, while Socket.io pumps status events back to the client asynchronously.
+2. **Type Safety Across Boundaries**: All schemas, request bodies, and response envelopes are written once in `@vedaai/shared` and compiled. This ensures compile-time validation, preventing runtime property mismatch or serialization issues.
+3. **Cache-Aside Registry Pattern**: We enforce centralized, type-safe cache keys (`CacheKeys` namespace) to prevent spelling drift. Database updates proactively purge the dynamic cache using non-blocking, memory-friendly `redis.scan` cursor sweeps, entirely avoiding blocking `KEYS` scans.
+4. **Rigid Multi-Tenant Isolation**: Every database fetch, update, deletion, and cache namespace is parameterized by the teacher's unique UUID (`userId`), establishing an absolute barrier against cross-tenant data leaks.
+5. **Ultra-Clean Production Code**: We maintain strict standards of readability, formatting, and type-checks. All inline/block comments have been fully purged from core logic to ensure a modern, clean, self-documenting code style.
 
 ---
 

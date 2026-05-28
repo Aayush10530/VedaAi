@@ -33,7 +33,6 @@ const worker = new Worker<GenerationJobData>(
     let userId: string | undefined
 
     try {
-      // Step 1: Fetch assignment
       await emitJobProgress(jobId, 'Fetching assignment details...', 10)
       const assignment = await AssignmentModel.findById(assignmentId)
       if (!assignment) {
@@ -41,12 +40,10 @@ const worker = new Worker<GenerationJobData>(
       }
       userId = assignment.userId.toString()
 
-      // Step 2: Mark as generating
       assignment.status = 'generating'
       assignment.jobId = jobId
       await assignment.save()
 
-      // Step 3: Extract file content if uploaded
       let extractedText: string | undefined
       if (assignment.fileUrl) {
         try {
@@ -63,31 +60,20 @@ const worker = new Worker<GenerationJobData>(
             await assignment.save()
           }
         } catch (fileErr) {
-          // Non-fatal — continue without extracted text
           console.warn('[Worker] File extraction failed, continuing without it:', fileErr)
         }
       }
 
-      // Step 4: Build prompt
-      // BUG 3 FIX: flattenObjectIds converts ObjectId fields to strings
       await emitJobProgress(jobId, 'Structuring AI prompt parameters...', 40)
       const assignmentPlain = assignment.toObject({ flattenObjectIds: true }) as unknown as Partial<Assignment>
       const prompt = buildPrompt(assignmentPlain, extractedText)
 
-      // Step 5: Call Groq AI
       await emitJobProgress(jobId, 'Generating question sections with AI...', 60)
       const rawResponse = await callGroq(prompt)
-      // Note: groqClient.ts already logs the first 300 chars of rawResponse
 
-      // Step 6: Parse and validate response
       await emitJobProgress(jobId, 'Validating question structures against schema...', 80)
       const paperOutput = parseGroqResponse(rawResponse)
 
-      // Step 7: Build the result object
-      // BUG B FIX: Do NOT include assignmentId in the embedded document —
-      // the QuestionPaperSchema does not have this field.
-      // Mongoose strict mode silently strips unknown fields, causing
-      // DB and Redis cache to be inconsistent if assignmentId is included.
       const paperToEmbed = {
         schoolName: assignment.schoolName,
         subject: assignment.subject,
@@ -100,32 +86,23 @@ const worker = new Worker<GenerationJobData>(
         generatedAt: new Date(),
       }
 
-      // The cached version DOES include assignmentId for frontend reference
       const paperForCache = {
         assignmentId,
         ...paperToEmbed,
       }
 
-      // Step 8: Save to MongoDB
       await emitJobProgress(jobId, 'Saving finalized question paper to database...', 90)
       assignment.status = 'complete'
       assignment.result = paperToEmbed as QuestionPaperResult
       await assignment.save()
 
-      // Step 9: Cache the full result (including assignmentId)
       await redis.setex(CacheKeys.assignmentResult(assignmentId), 3600, JSON.stringify(paperForCache))
       if (userId) {
         await redis.del(CacheKeys.assignmentList(userId))
       }
       await redis.del(CacheKeys.assignmentDetail(assignmentId))
 
-      // Step 10: Notify frontend
-      // BUG A FIX: Emit 100% FIRST, then complete.
-      // Emitting job:complete causes the frontend to navigate away immediately.
-      // The 100% progress event must arrive before that happens.
       await emitJobProgress(jobId, 'Done!', 100)
-      // Brief pause to ensure the 100% event is delivered and rendered
-      // before the complete event triggers navigation
       await new Promise<void>(resolve => setTimeout(resolve, 400))
       await emitJobComplete(jobId, assignmentId)
 
@@ -146,7 +123,7 @@ const worker = new Worker<GenerationJobData>(
         jobId,
         error instanceof Error ? error.message : 'Unknown generation error'
       )
-      throw error // Re-throw so BullMQ marks the job as failed
+      throw error
     }
   },
   {
@@ -159,7 +136,6 @@ const worker = new Worker<GenerationJobData>(
   }
 )
 
-// BUG 12 FIX: Log worker lifecycle events so you can confirm it started
 worker.on('ready', () => {
   console.log('[Worker] Generation worker ready — listening for jobs...')
 })
