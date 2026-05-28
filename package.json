@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace=@vedaai/frontend\" \"npm run dev --workspace=@vedaai/backend\" \"npm run worker --workspace=@vedaai/backend\"",
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspace=@vedaai/shared && npm run build --workspace=@vedaai/backend && npm run build --workspace=@vedaai/frontend",
     "tsc": "npm run tsc --workspaces"
   },
   "devDependencies": {
