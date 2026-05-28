@@ -37,3 +37,16 @@ export async function emitJobFailed(
   };
   await redis.publish('job-events', JSON.stringify(payload));
 }
+
+export async function emitJobQueued(
+  jobId: string,
+  assignmentId: string
+): Promise<void> {
+  const payload = {
+    type: 'queued',
+    jobId,
+    assignmentId,
+  };
+  await redis.publish('job-events', JSON.stringify(payload));
+}
+

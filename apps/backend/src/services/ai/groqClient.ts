@@ -18,7 +18,9 @@ export async function callGroq(prompt: string): Promise<string> {
       max_tokens: 4000,
     });
 
-    return completion.choices[0]?.message?.content ?? '';
+    const content = completion.choices[0]?.message?.content ?? '';
+    console.log('[Groq] Raw response (first 300 chars):', content.slice(0, 300));
+    return content;
   } catch (error) {
     console.error('[Groq Client] Error calling LLM completion:', error);
     throw error;

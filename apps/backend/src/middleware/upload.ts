@@ -2,6 +2,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import { env } from '../config/env';
+import type { Request } from 'express';
 
 if (!fs.existsSync(env.UPLOAD_DIR)) {
   fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (
-  _req: any,
+  _req: Request,
   file: Express.Multer.File,
   cb: multer.FileFilterCallback
 ) => {
@@ -28,7 +29,7 @@ const fileFilter = (
   if (allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error(`Only PDF, TXT, and image files (${allowedExtensions.join(', ')}) are allowed`) as any);
+    cb(new Error(`Only PDF, TXT, and image files (${allowedExtensions.join(', ')}) are allowed`));
   }
 };
 

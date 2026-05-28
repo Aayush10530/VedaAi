@@ -1,15 +1,8 @@
 import type { Assignment, QuestionConfig } from '@vedaai/shared';
-
-export const QUESTION_TYPE_LABELS: Record<string, string> = {
-  mcq: 'Multiple Choice Questions',
-  true_false: 'True/False Questions',
-  short_answer: 'Short Answer Questions',
-  long_answer: 'Long Answer Questions',
-  fill_blank: 'Fill in the Blanks',
-};
+import { QUESTION_TYPE_LABELS } from '@vedaai/shared';
 
 export function buildPrompt(
-  assignment: Partial<Assignment>,
+  assignment: Omit<Partial<Assignment>, '_id'> & { _id?: unknown },
   extractedText?: string
 ): string {
   const totalMarks = assignment.questionConfig!.reduce(

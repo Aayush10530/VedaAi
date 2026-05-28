@@ -5,7 +5,7 @@ const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   MONGODB_URI: z.string().url(),
   REDIS_URL: z.string(),
-  GROQ_API_KEY: z.string(),
+  GROQ_API_KEY: z.string().startsWith('gsk_', 'Groq API key must start with gsk_'),
   FRONTEND_URL: z.string().url(),
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_FILE_SIZE_MB: z.string().default('10').transform(Number),

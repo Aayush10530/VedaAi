@@ -9,13 +9,15 @@ import { cn } from '../../lib/cn';
 export function BottomNav() {
   const pathname = usePathname();
 
+  const isHomeActive = pathname === '/dashboard';
   const isToolkitActive = pathname.includes('/result') || pathname.includes('/new');
-  const isAssignmentsActive = pathname.includes('/assignments') || pathname === '/dashboard' || pathname === '/';
+  const isAssignmentsActive = pathname.startsWith('/assignments') && !isToolkitActive;
+  const isLibraryActive = pathname.startsWith('/library');
 
   const items = [
-    { label: 'Home', icon: Home, href: '/dashboard', active: false },
-    { label: 'Assignments', icon: FileText, href: '/dashboard', active: isAssignmentsActive && !isToolkitActive },
-    { label: 'Library', icon: FolderHeart, href: '/dashboard', active: false },
+    { label: 'Home', icon: Home, href: '/dashboard', active: isHomeActive },
+    { label: 'Assignments', icon: FileText, href: '/assignments', active: isAssignmentsActive },
+    { label: 'Library', icon: FolderHeart, href: '/library', active: isLibraryActive },
     { label: 'AI Toolkit', icon: Sparkles, href: '/assignments/new', active: isToolkitActive },
   ];
 

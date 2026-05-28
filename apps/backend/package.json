@@ -15,6 +15,7 @@
     "bullmq": "^5.7.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "express-rate-limit": "^7.3.1",
     "express": "^4.19.2",
     "groq-sdk": "^0.3.3",
     "ioredis": "^5.4.1",

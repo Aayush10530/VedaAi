@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { assignmentService } from '../services/assignment.service';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { env } from '../config/env';
+import type { CreateAssignmentInput } from '@vedaai/shared';
 
 const CreateAssignmentSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
@@ -38,7 +39,7 @@ export const assignmentsController = {
       assignedBy: env.ASSIGNED_BY || 'Aayush',
     };
 
-    const assignment = await assignmentService.create(assignmentData as any);
+    const assignment = await assignmentService.create(assignmentData as CreateAssignmentInput);
     res.status(201).json({ success: true, data: assignment });
   }),
 

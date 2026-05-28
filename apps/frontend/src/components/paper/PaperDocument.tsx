@@ -3,9 +3,10 @@ import type { QuestionPaper } from '@vedaai/shared';
 
 interface PaperDocumentProps {
   paper: QuestionPaper;
+  showAnswerKey?: boolean;
 }
 
-export function PaperDocument({ paper }: PaperDocumentProps) {
+export function PaperDocument({ paper, showAnswerKey = true }: PaperDocumentProps) {
   const getQuestionTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
       mcq: 'Multiple Choice Questions',
@@ -18,7 +19,7 @@ export function PaperDocument({ paper }: PaperDocumentProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md border border-neutral-100 p-8 md:p-12 max-w-2xl mx-auto space-y-6 font-sans text-neutral-800 leading-relaxed select-none animate-in fade-in zoom-in-95 duration-350">
+    <div className="bg-white rounded-2xl shadow-md border border-neutral-100 p-8 md:p-12 max-w-2xl mx-auto space-y-6 font-sans text-neutral-800 leading-relaxed select-none animate-in fade-in zoom-in-95 duration-355">
       <div className="text-center space-y-1">
         <h1 className="text-lg md:text-xl font-extrabold text-neutral-900 tracking-tight leading-snug">
           {paper.schoolName}
@@ -102,31 +103,34 @@ export function PaperDocument({ paper }: PaperDocumentProps) {
         </span>
       </div>
 
-      <hr className="border-neutral-150" />
-
-      <div className="pt-2 space-y-4">
-        <h3 className="font-extrabold text-sm md:text-base text-neutral-950">Answer Key:</h3>
-        <div className="space-y-4 pl-1">
-          {paper.sections.map((sec, secIdx) => (
-            <div key={secIdx} className="space-y-2.5">
-              <h4 className="font-bold text-xs text-neutral-900 uppercase tracking-wider">{sec.label}</h4>
-              <ol className="space-y-2">
-                {sec.questions.map((q, qIdx) => {
-                  const ans = paper.answerKey.find((a) => a.questionNumber === q.number);
-                  return (
-                    <li key={qIdx} className="text-xs md:text-sm text-neutral-700 flex items-start gap-1">
-                      <span className="font-bold">{q.number}.</span>
-                      <span className="font-medium">
-                        {ans ? ans.answer : q.answer || 'Answer not provided'}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ol>
+      {showAnswerKey && (
+        <>
+          <hr className="border-neutral-150" />
+          <div className="pt-2 space-y-4">
+            <h3 className="font-extrabold text-sm md:text-base text-neutral-950">Answer Key:</h3>
+            <div className="space-y-4 pl-1">
+              {paper.sections.map((sec, secIdx) => (
+                <div key={secIdx} className="space-y-2.5">
+                  <h4 className="font-bold text-xs text-neutral-900 uppercase tracking-wider">{sec.label}</h4>
+                  <ol className="space-y-2">
+                    {sec.questions.map((q, qIdx) => {
+                      const ans = paper.answerKey.find((a) => a.questionNumber === q.number);
+                      return (
+                        <li key={qIdx} className="text-xs md:text-sm text-neutral-700 flex items-start gap-1">
+                          <span className="font-bold">{q.number}.</span>
+                          <span className="font-medium">
+                            {ans ? ans.answer : q.answer || 'Answer not provided'}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

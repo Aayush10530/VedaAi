@@ -13,15 +13,18 @@ export function Sidebar() {
   const assignments = useAssignmentStore((state) => state.assignments);
   const activeCount = assignments.length || 10;
 
-  const isToolkitActive = pathname.includes('/result');
-  const isAssignmentsActive = pathname.includes('/assignments') || pathname === '/dashboard' || pathname === '/';
+  const isHomeActive = pathname === '/dashboard';
+  const isGroupsActive = pathname.startsWith('/groups');
+  const isToolkitActive = pathname.includes('/result') || pathname.includes('/new');
+  const isAssignmentsActive = pathname.startsWith('/assignments') && !isToolkitActive;
+  const isLibraryActive = pathname.startsWith('/library');
 
   const menuItems = [
-    { label: 'Home', icon: Home, href: '/dashboard', active: false },
-    { label: 'My Groups', icon: Users, href: '/dashboard', active: false },
-    { label: 'Assignments', icon: FileText, href: '/dashboard', active: isAssignmentsActive && !isToolkitActive, badge: activeCount },
-    { label: "AI Teacher's Toolkit", icon: Sparkles, href: '/assignments/new', active: isToolkitActive || pathname.includes('/new') },
-    { label: 'My Library', icon: FolderHeart, href: '/dashboard', active: false },
+    { label: 'Home', icon: Home, href: '/dashboard', active: isHomeActive },
+    { label: 'My Groups', icon: Users, href: '/groups', active: isGroupsActive },
+    { label: 'Assignments', icon: FileText, href: '/assignments', active: isAssignmentsActive, badge: activeCount },
+    { label: "AI Teacher's Toolkit", icon: Sparkles, href: '/assignments/new', active: isToolkitActive },
+    { label: 'My Library', icon: FolderHeart, href: '/library', active: isLibraryActive },
   ];
 
   return (

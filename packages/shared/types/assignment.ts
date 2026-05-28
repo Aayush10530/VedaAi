@@ -39,3 +39,12 @@ export interface CreateAssignmentInput {
   fileUrl?: string;
   questionConfig: QuestionConfig[];
 }
+
+export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
+  mcq: 'Multiple Choice Questions',
+  true_false: 'True / False Questions',
+  short_answer: 'Short Answer Questions',
+  long_answer: 'Long Answer Questions',
+  fill_blank: 'Fill in the Blanks',
+};
+

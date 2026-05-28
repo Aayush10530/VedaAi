@@ -1,8 +1,14 @@
 import { Queue } from 'bullmq';
-import { redis } from '../config/redis';
+import { env } from '../config/env';
+
+const redisUrl = new URL(env.REDIS_URL);
 
 export const generationQueue = new Queue('generation', {
-  connection: redis as any,
+  connection: {
+    host: redisUrl.hostname,
+    port: Number(redisUrl.port) || 6379,
+    maxRetriesPerRequest: null,
+  },
   defaultJobOptions: {
     attempts: 2,
     backoff: {

@@ -43,6 +43,35 @@ const QuestionPaperSchema = new Schema({
   generatedAt: { type: Date, default: Date.now },
 }, { _id: false });
 
+// Plain interface matching the embedded QuestionPaperSchema shape
+export interface QuestionPaperResult {
+  schoolName: string
+  subject: string
+  grade: string
+  timeMinutes: number
+  maxMarks: number
+  generalInstructions: string[]
+  sections: Array<{
+    label: string
+    instruction: string
+    questionType: string
+    questions: Array<{
+      number: number
+      text: string
+      difficulty: 'easy' | 'moderate' | 'hard'
+      marks: number
+      options?: string[] | undefined
+      answer?: string | undefined
+    }>
+  }>
+  answerKey: Array<{
+    questionNumber: number
+    sectionLabel: string
+    answer: string
+  }>
+  generatedAt: Date | string
+}
+
 export interface AssignmentDocument extends Document {
   title: string;
   subject: string;
@@ -57,7 +86,7 @@ export interface AssignmentDocument extends Document {
   questionConfig: QuestionConfig[];
   status: 'pending' | 'generating' | 'complete' | 'failed';
   jobId?: string;
-  result?: typeof QuestionPaperSchema;
+  result?: QuestionPaperResult;
   createdAt: Date;
   updatedAt: Date;
 }
