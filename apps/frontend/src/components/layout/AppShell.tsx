@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, Search, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowLeft, Search, ChevronDown, Sparkles, Settings, LogOut } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { MobileHeader } from './MobileHeader';
 import { BottomNav } from './BottomNav';
 import { Toast } from '../ui/Toast';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { useAuthStore } from '../../store/authStore';
+import { useUiStore } from '../../store/uiStore';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -19,16 +20,36 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const showToast = useUiStore((state) => state.showToast);
   const [mounted, setMounted] = useState(false);
 
   useWebSocket();
 
+  const handleLogout = () => {
+    logout();
+    showToast('Logged out successfully', 'success');
+    router.replace('/login');
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!profileDropdownOpen) return;
+    const handleOutsideClick = () => {
+      setProfileDropdownOpen(false);
+    };
+    window.addEventListener('click', handleOutsideClick);
+    return () => {
+      window.removeEventListener('click', handleOutsideClick);
+    };
+  }, [profileDropdownOpen]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -136,14 +157,79 @@ export function AppShell({ children }: AppShellProps) {
               )}
             </div>
 
-            <div className="flex items-center gap-5">
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-85 active:scale-98 transition-all duration-300 bg-white/30 border border-white/40 rounded-full py-1.5 pl-2.5 pr-4 shadow-sm backdrop-blur-md">
+            <div className="flex items-center gap-5 relative">
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setProfileDropdownOpen(!profileDropdownOpen);
+                }}
+                className={`flex items-center gap-2 cursor-pointer hover:bg-white/40 active:scale-98 transition-all duration-300 bg-white/30 border rounded-full py-1.5 pl-2.5 pr-4 shadow-sm backdrop-blur-md select-none ${
+                  profileDropdownOpen ? 'border-brand-orange/40 ring-4 ring-orange-500/5 bg-white/55' : 'border-white/40'
+                }`}
+              >
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white font-black text-[10px] flex items-center justify-center shadow-md">
                   {userInitials}
                 </div>
                 <span className="text-xs font-bold text-neutral-800 tracking-tight">{user?.name || 'Guest Teacher'}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
+                <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform duration-300 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
               </div>
+
+              {profileDropdownOpen && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 top-12 w-64 glass-panel bg-white/85 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl p-4 z-50 animate-fade-in-up origin-top-right transition-all duration-300"
+                >
+                  <div className="flex items-center gap-3 pb-3 border-b border-neutral-100/50">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white font-black text-xs flex items-center justify-center shadow-md">
+                      {userInitials}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-neutral-900 truncate">{user?.name || 'Guest Teacher'}</p>
+                      <p className="text-[10px] text-neutral-400 truncate">{user?.email || 'teacher@vedaai.com'}</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 pb-2 space-y-1">
+                    <div className="px-2 py-1 text-[10px] font-semibold text-neutral-400 uppercase tracking-wider">
+                      School
+                    </div>
+                    <div className="flex items-center gap-2 px-2 py-1.5 bg-neutral-50/50 rounded-lg border border-neutral-100/50">
+                      <div className="w-6 h-6 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-[10px] text-indigo-700 shadow-inner">
+                        {user?.schoolName
+                          ? user.schoolName
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .toUpperCase()
+                              .slice(0, 2)
+                          : 'VA'}
+                      </div>
+                      <span className="text-[10px] font-semibold text-neutral-700 truncate">{user?.schoolName || 'VedaAI Partner'}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-0.5 pt-2 border-t border-neutral-100/50">
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        router.push('/settings');
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-neutral-600 hover:bg-white/50 hover:text-neutral-900 active:scale-[0.98] transition-all duration-200 text-left text-xs font-semibold"
+                    >
+                      <Settings className="w-4 h-4 text-neutral-400" />
+                      Account Settings
+                    </button>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-red-500 hover:bg-red-50/50 hover:text-red-600 active:scale-[0.98] transition-all duration-200 text-left text-xs font-semibold"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </header>
 
