@@ -13,38 +13,7 @@ interface LibraryResource {
   size?: string;
 }
 
-const INITIAL_RESOURCES: LibraryResource[] = [
-  {
-    id: 'r1',
-    title: 'NCERT Grade 8 Science Kinematics Notes',
-    category: 'pdf',
-    addedDate: '24-05-2026',
-    description: 'Reference PDF parsed for custom generation in Physics chapters.',
-    size: '4.2 MB',
-  },
-  {
-    id: 'r2',
-    title: 'CBSE Midterm 45-min Template',
-    category: 'template',
-    addedDate: '20-05-2026',
-    description: 'Standard 20 marks structural template (4 MCQ, 3 Short, 2 Long questions).',
-  },
-  {
-    id: 'r3',
-    title: 'Organic Chemistry Core Question Pool',
-    category: 'qbank',
-    addedDate: '18-05-2026',
-    description: 'Curated pool of 50 advanced nomenclature and reaction mechanism questions.',
-    size: '1.8 MB',
-  },
-  {
-    id: 'r4',
-    title: 'Quiz on Cell Division (Draft)',
-    category: 'draft',
-    addedDate: '26-05-2026',
-    description: 'Work-in-progress draft paper containing unfinished numerical models.',
-  },
-];
+const INITIAL_RESOURCES: LibraryResource[] = [];
 
 export default function MyLibraryPage() {
   const [resources, setResources] = useState<LibraryResource[]>(INITIAL_RESOURCES);
@@ -274,9 +243,20 @@ export default function MyLibraryPage() {
         ))}
 
         {filteredResources.length === 0 && (
-          <div className="col-span-1 md:col-span-2 bg-white rounded-xl border border-neutral-100 p-12 text-center">
-            <FolderHeart className="w-8 h-8 text-neutral-300 mx-auto mb-3" />
-            <p className="text-sm font-semibold text-neutral-500">No resources found matching filters</p>
+          <div className="col-span-1 md:col-span-2 bg-white rounded-2xl border border-neutral-100 p-12 text-center space-y-4 shadow-sm max-w-md mx-auto mt-6">
+            <div className="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto text-indigo-500">
+              <FolderHeart className="w-8 h-8" />
+            </div>
+            <h3 className="font-bold text-lg text-neutral-800">Your Resource Vault</h3>
+            <p className="text-xs text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed">
+              Store syllabus books, custom exam templates, reference PDFs, and question pools to customize AI paper generation in seconds.
+            </p>
+            <button
+              onClick={() => setShowUploadZone(true)}
+              className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all mx-auto"
+            >
+              <UploadCloud className="w-4 h-4" /> Upload Reference
+            </button>
           </div>
         )}
       </div>

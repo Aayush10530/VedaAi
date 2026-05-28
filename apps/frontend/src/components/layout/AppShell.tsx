@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, Bell, Search, ChevronDown, Sparkles } from 'lucide-react';
+import { ArrowLeft, Search, ChevronDown, Sparkles } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { MobileHeader } from './MobileHeader';
 import { BottomNav } from './BottomNav';
@@ -137,12 +137,7 @@ export function AppShell({ children }: AppShellProps) {
             </div>
 
             <div className="flex items-center gap-5">
-              <div className="relative p-1.5 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors">
-                <Bell className="w-5 h-5 text-neutral-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-brand-orange ring-2 ring-white animate-pulse" />
-              </div>
-
-              <div className="flex items-center gap-2 border-l border-neutral-100 pl-5 cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white font-bold text-xs flex items-center justify-center shadow-inner">
                   {userInitials}
                 </div>

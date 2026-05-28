@@ -1,12 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 interface MobileHeaderProps {
   onToggleSidebar?: () => void;
 }
 
 export function MobileHeader({ onToggleSidebar }: MobileHeaderProps) {
+  const user = useAuthStore((state) => state.user);
+  
+  const userInitials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : 'GT';
+
   return (
     <header className="md:hidden h-14 bg-white border-b border-neutral-100 flex items-center justify-between px-4 z-40 sticky top-0">
       <Link href="/dashboard" className="flex items-center gap-2">
@@ -17,12 +29,8 @@ export function MobileHeader({ onToggleSidebar }: MobileHeaderProps) {
       </Link>
 
       <div className="flex items-center gap-3">
-        <div className="relative p-1.5 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors">
-          <Bell className="w-5 h-5 text-neutral-600" />
-          <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-brand-orange ring-2 ring-white" />
-        </div>
-        <div className="w-8 h-8 rounded-full bg-neutral-200 border border-neutral-300 flex items-center justify-center text-xs font-semibold text-neutral-700">
-          JD
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-orange to-red-500 text-white border border-neutral-100 flex items-center justify-center text-xs font-semibold shadow-inner">
+          {userInitials}
         </div>
         {onToggleSidebar && (
           <button

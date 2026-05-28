@@ -16,76 +16,7 @@ interface ClassGroup {
   students: { name: string; roll: string; lastScore: string }[];
 }
 
-const INITIAL_GROUPS: ClassGroup[] = [
-  {
-    id: 'g1',
-    name: 'Grade 10-A (Science)',
-    subject: 'Biology & Chemistry',
-    studentCount: 38,
-    activeAssignments: 3,
-    averageScore: 84,
-    grade: 'Grade 10',
-    gradient: 'from-emerald-500 to-teal-600',
-    students: [
-      { name: 'Aarav Sharma', roll: '10A-01', lastScore: '92%' },
-      { name: 'Ananya Iyer', roll: '10A-02', lastScore: '88%' },
-      { name: 'Kabir Verma', roll: '10A-14', lastScore: '76%' },
-      { name: 'Meera Nair', roll: '10A-20', lastScore: '95%' },
-      { name: 'Rohan Gupta', roll: '10A-27', lastScore: '81%' },
-    ],
-  },
-  {
-    id: 'g2',
-    name: 'Grade 8-B (Mathematics)',
-    subject: 'Algebra & Geometry',
-    studentCount: 32,
-    activeAssignments: 2,
-    averageScore: 78,
-    grade: 'Grade 8',
-    gradient: 'from-indigo-500 to-blue-600',
-    students: [
-      { name: 'Aditya Rao', roll: '08B-03', lastScore: '84%' },
-      { name: 'Ishita Patel', roll: '08B-09', lastScore: '71%' },
-      { name: 'Nehal Joshi', roll: '08B-15', lastScore: '90%' },
-      { name: 'Siddharth Sen', roll: '08B-22', lastScore: '65%' },
-      { name: 'Zara Khan', roll: '08B-31', lastScore: '82%' },
-    ],
-  },
-  {
-    id: 'g3',
-    name: 'Grade 11-A (Physics)',
-    subject: 'Electromagnetism',
-    studentCount: 29,
-    activeAssignments: 4,
-    averageScore: 81,
-    grade: 'Grade 11',
-    gradient: 'from-orange-500 to-amber-600',
-    students: [
-      { name: 'Dev Bajwa', roll: '11A-04', lastScore: '79%' },
-      { name: 'Gauri Misra', roll: '11A-08', lastScore: '93%' },
-      { name: 'Manish Pandey', roll: '11A-12', lastScore: '85%' },
-      { name: 'Pooja Sethi', roll: '11A-18', lastScore: '74%' },
-      { name: 'Yash Vardhan', roll: '11A-25', lastScore: '88%' },
-    ],
-  },
-  {
-    id: 'g4',
-    name: 'Grade 9-C (English)',
-    subject: 'Literature & Grammar',
-    studentCount: 35,
-    activeAssignments: 1,
-    averageScore: 89,
-    grade: 'Grade 9',
-    gradient: 'from-purple-500 to-pink-600',
-    students: [
-      { name: 'Aryan Goel', roll: '09C-02', lastScore: '91%' },
-      { name: 'Diya Kapoor', roll: '09C-07', lastScore: '94%' },
-      { name: 'Kunal Kapoor', roll: '09C-16', lastScore: '83%' },
-      { name: 'Riya Malhotra', roll: '09C-21', lastScore: '87%' },
-      { name: 'Tanvi Shah', roll: '09C-28', lastScore: '90%' },
-    ],
-  },
-];
+const INITIAL_GROUPS: ClassGroup[] = [];
 
 export default function MyGroupsPage() {
   const [groups, setGroups] = useState<ClassGroup[]>(INITIAL_GROUPS);
@@ -181,55 +112,73 @@ export default function MyGroupsPage() {
       </div>
 
       {/* Grid of Groups */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredGroups.map((group) => (
-          <div
-            key={group.id}
-            onClick={() => setSelectedGroup(group)}
-            className="bg-white rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
-          >
-            {/* Gradient Top */}
-            <div className={`bg-gradient-to-r ${group.gradient} p-5 text-white flex justify-between items-start`}>
-              <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest bg-white/20 px-2 py-0.5 rounded">
-                  {group.grade}
-                </span>
-                <h3 className="font-bold text-lg mt-2 group-hover:underline">{group.name}</h3>
-                <p className="text-xs text-white/80 font-medium flex items-center gap-1 mt-1">
-                  <BookOpen className="w-3 h-3" /> {group.subject}
-                </p>
-              </div>
-              <div className="p-2 bg-white/10 rounded-full">
-                <Users className="w-5 h-5" />
-              </div>
-            </div>
-
-            {/* Metrics */}
-            <div className="p-5 grid grid-cols-3 gap-4 border-b border-neutral-50 bg-neutral-50/50">
-              <div className="text-center border-r border-neutral-100 last:border-0">
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Students</p>
-                <p className="text-lg font-bold text-neutral-800 mt-0.5">{group.studentCount}</p>
-              </div>
-              <div className="text-center border-r border-neutral-100 last:border-0">
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Active Exams</p>
-                <p className="text-lg font-bold text-neutral-800 mt-0.5">{group.activeAssignments}</p>
-              </div>
-              <div className="text-center last:border-0">
-                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Avg Score</p>
-                <p className="text-lg font-bold text-emerald-600 mt-0.5 flex items-center justify-center gap-0.5">
-                  <TrendingUp className="w-3.5 h-3.5" /> {group.averageScore > 0 ? `${group.averageScore}%` : 'N/A'}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Action Footer */}
-            <div className="px-5 py-3.5 flex justify-between items-center text-xs font-semibold text-neutral-600 hover:text-neutral-900 transition-colors">
-              <span>View Roster & Detail Analytics</span>
-              <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-1 transition-transform" />
-            </div>
+      {filteredGroups.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-neutral-100 p-8 text-center space-y-4 shadow-sm max-w-lg mx-auto mt-8">
+          <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto text-emerald-500">
+            <GraduationCap className="w-8 h-8" />
           </div>
-        ))}
-      </div>
+          <h3 className="font-bold text-lg text-neutral-800">Create your first Class Group</h3>
+          <p className="text-xs text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed">
+            Organize student roster lists, manage separate subjects, and track overall cohort scoring analytics instantly in real-time.
+          </p>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-md active:scale-95 transition-all mx-auto"
+          >
+            <Plus className="w-3.5 h-3.5" /> Get Started
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filteredGroups.map((group) => (
+            <div
+              key={group.id}
+              onClick={() => setSelectedGroup(group)}
+              className="bg-white rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
+            >
+              {/* Gradient Top */}
+              <div className={`bg-gradient-to-r ${group.gradient} p-5 text-white flex justify-between items-start`}>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-widest bg-white/20 px-2 py-0.5 rounded">
+                    {group.grade}
+                  </span>
+                  <h3 className="font-bold text-lg mt-2 group-hover:underline">{group.name}</h3>
+                  <p className="text-xs text-white/80 font-medium flex items-center gap-1 mt-1">
+                    <BookOpen className="w-3 h-3" /> {group.subject}
+                  </p>
+                </div>
+                <div className="p-2 bg-white/10 rounded-full">
+                  <Users className="w-5 h-5" />
+                </div>
+              </div>
+
+              {/* Metrics */}
+              <div className="p-5 grid grid-cols-3 gap-4 border-b border-neutral-50 bg-neutral-50/50">
+                <div className="text-center border-r border-neutral-100 last:border-0">
+                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Students</p>
+                  <p className="text-lg font-bold text-neutral-800 mt-0.5">{group.studentCount}</p>
+                </div>
+                <div className="text-center border-r border-neutral-100 last:border-0">
+                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Active Exams</p>
+                  <p className="text-lg font-bold text-neutral-800 mt-0.5">{group.activeAssignments}</p>
+                </div>
+                <div className="text-center last:border-0">
+                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Avg Score</p>
+                  <p className="text-lg font-bold text-emerald-600 mt-0.5 flex items-center justify-center gap-0.5">
+                    <TrendingUp className="w-3.5 h-3.5" /> {group.averageScore > 0 ? `${group.averageScore}%` : 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Action Footer */}
+              <div className="px-5 py-3.5 flex justify-between items-center text-xs font-semibold text-neutral-600 hover:text-neutral-900 transition-colors">
+                <span>View Roster & Detail Analytics</span>
+                <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Class Details Modal */}
       {selectedGroup && (

@@ -96,10 +96,13 @@ export function Sidebar() {
 
       <div className="space-y-3">
         <Link
-          href="/dashboard"
-          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 transition-all"
+          href="/settings"
+          className={cn(
+            'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900 transition-all',
+            pathname === '/settings' && 'bg-neutral-100 text-neutral-950 font-semibold'
+          )}
         >
-          <Settings className="w-4.5 h-4.5 text-neutral-400" />
+          <Settings className={cn('w-4.5 h-4.5 text-neutral-400', pathname === '/settings' && 'text-neutral-900')} />
           <span className="text-sm">Settings</span>
         </Link>
 
