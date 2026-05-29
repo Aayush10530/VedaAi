@@ -1,4 +1,5 @@
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', (err: NodeJS.ErrnoException) => {
+  if (err.code === 'ECONNRESET' || err.code === 'EPIPE') return; // normal on Render
   console.error('[Process] Uncaught exception:', err.message);
 });
 
@@ -20,6 +21,14 @@ async function main() {
 
     const app = createApp();
     const httpServer = http.createServer(app);
+
+    httpServer.on('clientError', (err: NodeJS.ErrnoException, socket) => {
+      if (err.code === 'ECONNRESET' || err.code === 'EPIPE') {
+        socket.destroy();
+        return;
+      }
+      socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+    });
 
     const io = initSocket(httpServer);
 
