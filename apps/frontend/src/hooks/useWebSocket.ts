@@ -8,9 +8,9 @@ export function useWebSocket() {
 
   useEffect(() => {
     const wsURL = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000';
-    
+
     const socket = io(wsURL, {
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'],
     });
 
     socketRef.current = socket;
