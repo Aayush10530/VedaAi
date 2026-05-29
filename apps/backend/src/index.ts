@@ -1,3 +1,11 @@
+process.on('uncaughtException', (err) => {
+  console.error('[Process] Uncaught exception:', err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[Process] Unhandled rejection:', reason);
+});
+
 import 'dotenv/config';
 import { env } from './config/env';
 import { connectDB } from './config/db';
@@ -16,6 +24,9 @@ async function main() {
     const io = initSocket(httpServer);
 
     const subscriber = redis.duplicate();
+    subscriber.on('error', (err) => {
+      console.error('[Redis Subscriber] Error:', err.message);
+    });
     await subscriber.subscribe('job-events');
 
     subscriber.on('message', (channel, message) => {
@@ -23,7 +34,6 @@ async function main() {
         try {
           const event = JSON.parse(message);
           const { type, jobId, ...payload } = event;
-          
           io.to(`job:${jobId}`).emit(`job:${type}`, { jobId, ...payload });
         } catch (err) {
           console.error('[Socket Broadcast] Error parsing pub/sub message:', err);
