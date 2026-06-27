@@ -51,6 +51,11 @@ export function AssignmentForm() {
   };
 
   const onSubmit = async (values: any) => {
+    if (step === 1) {
+      handleNext();
+      return;
+    }
+
     try {
       setLoading(true);
       
