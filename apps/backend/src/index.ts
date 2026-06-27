@@ -14,6 +14,7 @@ import { createApp } from './app';
 import http from 'http';
 import { initSocket } from './websocket/socket';
 import { redis } from './config/redis';
+import './workers/generation.worker';
 
 async function main() {
   try {

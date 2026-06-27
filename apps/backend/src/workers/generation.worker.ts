@@ -18,10 +18,14 @@ interface GenerationJobData {
   assignmentId: string
 }
 
-connectDB().catch((err) => {
-  console.error('[Worker] MongoDB connection failed:', err)
-  process.exit(1)
-})
+import mongoose from 'mongoose';
+
+if (mongoose.connection.readyState === 0) {
+  connectDB().catch((err) => {
+    console.error('[Worker] MongoDB connection failed:', err)
+    process.exit(1)
+  })
+}
 
 const redisUrl = new URL(env.REDIS_URL)
 
