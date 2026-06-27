@@ -10,6 +10,9 @@ export function initSocket(httpServer: HttpServer): Server {
       origin: env.FRONTEND_URL,
       methods: ['GET', 'POST'],
     },
+    pingInterval: 25000,
+    pingTimeout: 60000,
+    transports: ['polling', 'websocket'],
   });
 
   io.on('connection', (socket) => {

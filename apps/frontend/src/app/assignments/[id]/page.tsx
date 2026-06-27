@@ -9,6 +9,7 @@ import { useWebSocket } from '../../../hooks/useWebSocket';
 import { assignmentService } from '../../../services/assignmentService';
 import { GenerationProgress } from '../../../components/assignment/GenerationProgress';
 import { Spinner } from '../../../components/ui/Spinner';
+import { useAuthStore } from '../../../store/authStore';
 
 export default function AssignmentDetailPage() {
   const router = useRouter();
@@ -17,8 +18,10 @@ export default function AssignmentDetailPage() {
   const { activeAssignment, setActiveAssignment } = useAssignmentStore();
   const { setActiveJobId, setJobStatus } = useWsStore();
   const { showToast } = useUiStore();
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     async function load() {
       try {
         const data = await assignmentService.get(id);
@@ -43,7 +46,7 @@ export default function AssignmentDetailPage() {
       }
     }
     load();
-  }, [id]);
+  }, [id, hasHydrated]);
 
   if (!activeAssignment) {
     return (
