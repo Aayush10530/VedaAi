@@ -7,7 +7,11 @@ export const generationQueue = new Queue('generation', {
   connection: {
     host: redisUrl.hostname,
     port: Number(redisUrl.port) || 6379,
+    username: redisUrl.username ? decodeURIComponent(redisUrl.username) : undefined,
+    password: redisUrl.password ? decodeURIComponent(redisUrl.password) : undefined,
     maxRetriesPerRequest: null,
+    keepAlive: 10000,
+    ...(redisUrl.protocol === 'rediss:' ? { tls: {} } : {}),
   },
   defaultJobOptions: {
     attempts: 2,

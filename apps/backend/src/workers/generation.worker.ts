@@ -133,6 +133,7 @@ const worker = new Worker<GenerationJobData>(
       username: redisUrl.username ? decodeURIComponent(redisUrl.username) : undefined,
       password: redisUrl.password ? decodeURIComponent(redisUrl.password) : undefined,
       maxRetriesPerRequest: null,
+      keepAlive: 10000,
       ...(redisUrl.protocol === 'rediss:' ? { tls: {} } : {}),
     },
     concurrency: 2,
