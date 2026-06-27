@@ -27,6 +27,7 @@ export function AppShell({ children }: AppShellProps) {
   const logout = useAuthStore((state) => state.logout);
   const showToast = useUiStore((state) => state.showToast);
   const [mounted, setMounted] = useState(false);
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   useWebSocket();
 
@@ -53,6 +54,7 @@ export function AppShell({ children }: AppShellProps) {
 
   useEffect(() => {
     if (!mounted) return;
+    if (!hasHydrated) return; // wait for token to load from local storage
 
     const isAuthPage = pathname === '/login' || pathname === '/signup';
 
@@ -61,7 +63,7 @@ export function AppShell({ children }: AppShellProps) {
     } else if (isAuthenticated && isAuthPage) {
       router.replace('/dashboard');
     }
-  }, [isAuthenticated, pathname, router, mounted]);
+  }, [isAuthenticated, pathname, router, mounted, hasHydrated]);
 
   const handleBack = () => {
     if (pathname !== '/dashboard') {
