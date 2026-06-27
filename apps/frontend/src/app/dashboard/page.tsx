@@ -29,12 +29,14 @@ export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
   const isLoading = useUiStore((state) => state.isLoading);
   const { showToast } = useUiStore();
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   useEffect(() => {
+    if (!hasHydrated) return;
     fetchAssignments();
-  }, []);
+  }, [hasHydrated]);
 
-  if (isLoading && assignments.length === 0) {
+  if ((!hasHydrated || isLoading) && assignments.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center p-8 min-h-[calc(100vh-140px)] bg-transparent">
         <Spinner size="lg" />
