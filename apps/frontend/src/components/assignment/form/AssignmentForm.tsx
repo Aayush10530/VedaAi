@@ -78,7 +78,15 @@ export function AssignmentForm() {
         additionalInstructions: values.additionalInstructions || undefined,
       });
 
-      const triggered = await assignmentService.generate(created._id);
+      // Safely extract the ID in case it was returned as `id`, `_id`, or inside an array.
+      const assignmentObj = Array.isArray(created) ? created[0] : created;
+      const assignmentId = assignmentObj._id || assignmentObj.id;
+      
+      if (!assignmentId) {
+        throw new Error('Invalid response from server: Assignment ID is missing');
+      }
+
+      const triggered = await assignmentService.generate(assignmentId);
       
       setActiveJobId(triggered.jobId);
       setJobStatus('generating');
