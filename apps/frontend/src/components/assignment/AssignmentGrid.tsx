@@ -23,6 +23,7 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
   });
 
   return (
+    <>
     <div className="p-6 space-y-6 animate-fade-in-up">
       <div className="flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
@@ -90,15 +91,16 @@ export function AssignmentGrid({ assignments }: AssignmentGridProps) {
           ))}
         </div>
       )}
-
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-10 z-30 shadow-2xl">
-        <button
-          onClick={() => router.push('/assignments/new')}
-          className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-red-500 hover:from-orange-650 hover:to-red-600 text-white text-xs font-black px-6 py-3.5 rounded-full shadow-lg hover:shadow-orange-500/15 hover:scale-[1.03] active:scale-95 transition-all duration-300"
-        >
-          <Plus className="w-4 h-4" /> Create Assignment
-        </button>
-      </div>
     </div>
+    
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-10 z-30 shadow-2xl">
+      <button
+        onClick={() => router.push('/assignments/new')}
+        className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-red-500 hover:from-orange-650 hover:to-red-600 text-white text-xs font-black px-6 py-3.5 rounded-full shadow-lg hover:shadow-orange-500/15 hover:scale-[1.03] active:scale-95 transition-all duration-300"
+      >
+        <Plus className="w-4 h-4" /> Create Assignment
+      </button>
+    </div>
+  </>
   );
 }
