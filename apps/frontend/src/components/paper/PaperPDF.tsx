@@ -213,27 +213,6 @@ export function PaperPDF({ paper }: PaperPDFProps) {
 
         <Text style={styles.endPaper}>--- End of Question Paper ---</Text>
 
-        <View style={styles.divider} />
-
-        <View style={styles.answerKeyContainer} wrap={false}>
-          <Text style={styles.answerKeyTitle}>Answer Key:</Text>
-          {paper.sections.map((sec, secIdx) => (
-            <View key={secIdx} style={{ marginBottom: 10 }}>
-              <Text style={[styles.boldText, { marginBottom: 4 }]}>{sec.label}</Text>
-              {sec.questions.map((q, qIdx) => {
-                const ans = paper.answerKey.find((a) => a.questionNumber === q.number);
-                return (
-                  <View key={qIdx} style={styles.answerRow}>
-                    <Text style={styles.questionNum}>{q.number}.</Text>
-                    <Text style={styles.questionText}>
-                      {ans ? ans.answer : q.answer || 'Answer not provided'}
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
-          ))}
-        </View>
       </Page>
     </Document>
   );

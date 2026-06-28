@@ -23,20 +23,7 @@ export function PaperActionBar({ paper }: PaperActionBarProps) {
   }, []);
 
   const handleRegenerate = async () => {
-    try {
-      setLoading(true);
-      const triggered = await assignmentService.generate(paper.assignmentId);
-      
-      setActiveJobId(triggered.jobId);
-      setJobStatus('generating');
-      
-      showToast('Regeneration enqueued!', 'success');
-      router.push(`/assignments/${paper.assignmentId}`);
-    } catch (err) {
-      showToast((err as Error).message || 'Failed to trigger regeneration', 'error');
-    } finally {
-      setLoading(false);
-    }
+    router.push(`/assignments/${paper.assignmentId}/configure`);
   };
 
   return (

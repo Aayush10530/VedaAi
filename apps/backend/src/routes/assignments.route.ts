@@ -33,6 +33,9 @@ assignmentsRouter.get('/:id', assignmentsController.get)
 // DELETE /api/assignments/:id
 assignmentsRouter.delete('/:id', assignmentsController.delete)
 
+// PUT /api/assignments/:id
+assignmentsRouter.put('/:id', assignmentsController.update)
+
 // POST /api/assignments/:id/generate  ← rate limited
 assignmentsRouter.post('/:id/generate', generateLimiter, assignmentsController.triggerGeneration)
 

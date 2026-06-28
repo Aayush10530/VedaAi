@@ -10,27 +10,32 @@ import { assignmentService } from '../../../services/assignmentService';
 import { useUiStore } from '../../../store/uiStore';
 import { useWsStore } from '../../../store/wsStore';
 
-export function AssignmentForm() {
+interface AssignmentFormProps {
+  initialData?: any;
+  isUpdate?: boolean;
+}
+
+export function AssignmentForm({ initialData, isUpdate = false }: AssignmentFormProps) {
   const router = useRouter();
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2>(isUpdate ? 2 : 1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { showToast, setLoading } = useUiStore();
   const { setActiveJobId, setJobStatus } = useWsStore();
 
   const methods = useForm({
     defaultValues: {
-      title: '',
-      subject: '',
-      grade: '',
-      schoolName: '',
-      dueDate: '',
-      timeLimit: 45,
-      fileUrl: '',
-      filename: '',
-      questionConfig: [
+      title: initialData?.title || '',
+      subject: initialData?.subject || '',
+      grade: initialData?.grade || '',
+      schoolName: initialData?.schoolName || '',
+      dueDate: initialData?.dueDate ? new Date(initialData.dueDate).toISOString().split('T')[0] : '',
+      timeLimit: initialData?.timeLimit || 45,
+      fileUrl: initialData?.fileUrl || '',
+      filename: initialData?.filename || '',
+      questionConfig: initialData?.questionConfig || [
         { type: 'mcq', count: 5, marksEach: 2 },
       ],
-      additionalInstructions: '',
+      additionalInstructions: initialData?.additionalInstructions || '',
     },
   });
 
@@ -72,22 +77,28 @@ export function AssignmentForm() {
         marksEach: Number(q.marksEach),
       }));
 
-      const created = await assignmentService.create({
+      const payload = {
         title: values.title,
         subject: values.subject,
         grade: values.grade,
         schoolName: values.schoolName,
-        assignedBy: 'Aayush',
+        assignedBy: initialData?.assignedBy || 'Aayush',
         dueDate: values.dueDate,
         timeLimit: Number(values.timeLimit),
         fileUrl: values.fileUrl || undefined,
         questionConfig: cleanConfig,
         additionalInstructions: values.additionalInstructions || undefined,
-      });
+      };
 
-      // Safely extract the ID in case it was returned as `id`, `_id`, or inside an array.
-      const assignmentObj = Array.isArray(created) ? created[0] : created;
-      const assignmentId = assignmentObj._id || assignmentObj.id;
+      let assignmentId = initialData?._id || initialData?.id;
+
+      if (isUpdate && assignmentId) {
+        await assignmentService.update(assignmentId, payload);
+      } else {
+        const created = await assignmentService.create(payload);
+        const assignmentObj = Array.isArray(created) ? created[0] : created;
+        assignmentId = assignmentObj._id || assignmentObj.id;
+      }
       
       if (!assignmentId) {
         throw new Error('Invalid response from server: Assignment ID is missing');
@@ -99,7 +110,7 @@ export function AssignmentForm() {
       setJobStatus('generating');
       
       showToast('Assignment enqueued for generation!', 'success');
-      router.push(`/assignments/${created._id}`);
+      router.push(`/assignments/${assignmentId}`);
     } catch (err) {
       showToast((err as Error).message || 'Failed to submit assignment', 'error');
     } finally {

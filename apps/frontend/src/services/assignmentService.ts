@@ -18,6 +18,14 @@ export const assignmentService = {
     throw new Error(res.data.error || 'Failed to create assignment');
   },
 
+  async update(id: string, data: Partial<CreateAssignmentInput>): Promise<Assignment> {
+    const res = await api.put<ApiResponse<Assignment>>(`/assignments/${id}`, data);
+    if (res.data.success) {
+      return res.data.data;
+    }
+    throw new Error(res.data.error || 'Failed to update assignment');
+  },
+
   async get(id: string): Promise<Assignment> {
     const res = await api.get<ApiResponse<Assignment>>(`/assignments/${id}`);
     if (res.data.success) {

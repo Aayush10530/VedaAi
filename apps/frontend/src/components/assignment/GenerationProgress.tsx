@@ -24,15 +24,8 @@ export function GenerationProgress({ assignmentId }: GenerationProgressProps) {
   }, [jobStatus, assignmentId, router, showToast, resetJobState]);
 
   const handleRetry = async () => {
-    try {
-      resetJobState();
-      const triggered = await assignmentService.generate(assignmentId);
-      setActiveJobId(triggered.jobId);
-      setJobStatus('generating');
-      showToast('Retrying generation...', 'success');
-    } catch (err) {
-      showToast((err as Error).message || 'Failed to restart generation', 'error');
-    }
+    resetJobState();
+    router.push(`/assignments/${assignmentId}/configure`);
   };
 
   const stepText = jobProgress?.step || 'Preparing assessment configuration...';

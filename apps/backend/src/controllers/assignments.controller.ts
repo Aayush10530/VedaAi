@@ -61,6 +61,17 @@ export const assignmentsController = {
     res.status(200).json({ success: true, data: assignment });
   }),
 
+  update: asyncHandler(async (req: Request, res: Response) => {
+    const authReq = req as AuthenticatedRequest;
+    const userId = authReq.user!._id.toString();
+    const { id } = req.params;
+    
+    const parsedInput = CreateAssignmentSchema.partial().parse(req.body);
+    const updated = await assignmentService.update(id, userId, parsedInput);
+    
+    res.status(200).json({ success: true, data: updated });
+  }),
+
   delete: asyncHandler(async (req: Request, res: Response) => {
     const authReq = req as AuthenticatedRequest;
     const userId = authReq.user!._id.toString();

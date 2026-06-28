@@ -28,6 +28,20 @@ export const assignmentService = {
     return assignment.toObject() as AssignmentDocument
   },
 
+  async update(id: string, userId: string, updateData: Partial<CreateAssignmentInput>): Promise<AssignmentDocument> {
+    const assignment = await AssignmentModel.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: updateData },
+      { new: true }
+    )
+    if (!assignment) {
+      throw new NotFoundError(`Assignment ${id} not found`)
+    }
+    await cacheService.del(CacheKeys.assignmentDetail(id))
+    await cacheService.del(CacheKeys.assignmentList(userId))
+    return assignment.toObject() as AssignmentDocument
+  },
+
   async findById(id: string): Promise<AssignmentDocument> {
     const cacheKey = CacheKeys.assignmentDetail(id)
 
