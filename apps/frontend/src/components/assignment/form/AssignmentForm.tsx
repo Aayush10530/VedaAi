@@ -13,6 +13,7 @@ import { useWsStore } from '../../../store/wsStore';
 export function AssignmentForm() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { showToast, setLoading } = useUiStore();
   const { setActiveJobId, setJobStatus } = useWsStore();
 
@@ -42,7 +43,9 @@ export function AssignmentForm() {
   const handleNext = async () => {
     const isValid = await methods.trigger(['title', 'subject', 'grade', 'schoolName', 'dueDate', 'timeLimit']);
     if (isValid) {
+      setIsTransitioning(true);
       setStep(2);
+      setTimeout(() => setIsTransitioning(false), 500);
     }
   };
 
@@ -53,6 +56,10 @@ export function AssignmentForm() {
   const onSubmit = async (values: any) => {
     if (step === 1) {
       handleNext();
+      return;
+    }
+
+    if (isTransitioning) {
       return;
     }
 
@@ -142,8 +149,10 @@ export function AssignmentForm() {
                   </button>
                 ) : (
                   <button
-                    type="submit"
-                    className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-brand-dark text-white rounded-full px-6 py-2.5 text-xs font-bold hover:opacity-90 transition-all active:scale-95 shadow-md hover:shadow-lg"
+                    type="button"
+                    disabled={isTransitioning}
+                    onClick={methods.handleSubmit(onSubmit)}
+                    className="flex items-center gap-2 bg-gradient-to-r from-brand-orange to-brand-dark text-white rounded-full px-6 py-2.5 text-xs font-bold hover:opacity-90 disabled:opacity-50 disabled:pointer-events-none transition-all active:scale-95 shadow-md hover:shadow-lg"
                   >
                     Submit & Generate <Sparkles className="w-4 h-4" />
                   </button>
