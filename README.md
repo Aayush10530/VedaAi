@@ -1,4 +1,4 @@
-# 🌌 VedaAI — Premium AI-Powered Assessment & Question Paper Engine
+# 🌌 PyxisAI — Premium AI-Powered Assessment & Question Paper Engine
 
 > A high-performance, enterprise-grade, multi-tenant monorepo platform designed for teachers and educational institutions to generate, orchestrate, customize, and compile highly structured question papers in real-time.
 
